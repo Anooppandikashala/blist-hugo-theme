@@ -35,12 +35,22 @@
     // On page load or when changing themes
     const darkmode = document.querySelector('.toggle-dark-mode');
 
+    function changeLogoToDark() {
+        document.getElementById("anooptube_logo").src = document.getElementById("anooptube_logo").src.replace("logo", "logo_dark");
+    }
+
+    function changeLogoToLight() {
+        document.getElementById("anooptube_logo").src = document.getElementById("anooptube_logo").src.replace("logo_dark", "logo");
+    }
+
     function toggleDarkMode() {
         if (document.documentElement.classList.contains('dark')) {
             document.documentElement.classList.remove('dark')
+            changeLogoToLight()
             localStorage.setItem('darkmode', 'light')
         } else {
             document.documentElement.classList.add('dark')
+            changeLogoToDark()
             localStorage.setItem('darkmode', 'dark')
         }
     }
@@ -53,6 +63,7 @@
 
     if (!darkStorage && isBrowserDark) {
         document.documentElement.classList.add('dark');
+        changeLogoToDark()
     }
 
     if (darkStorage && darkStorage === 'dark') {
