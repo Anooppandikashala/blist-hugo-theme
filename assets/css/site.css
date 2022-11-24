@@ -70,3 +70,17 @@ body {
 .h-75 {
     height: 24rem;
 }
+
+.anooptube-blogtitle {
+    font-weight: 500 !important;
+    font-size: 2.025rem !important;
+    margin-bottom: 0.25rem !important;
+}
+
+.anooptube-blogtitle-fontFamily-Michroma {
+    font-family: 'Michroma', sans-serif !important;
+}
+
+.anooptube-blogtitle-fontFamily-Playball {
+    font-family: 'Playball', cursive !important;
+}
