@@ -1,9 +1,20 @@
-{{ define "main" }} {{- partial "intro.html" . -}} {{ $frontBundle := .Site.Params.frontBundle | default "blog" }}
+{{ define "main" }} {{- partial "intro.html" . -}} {{ $frontBundle := .Site.Params.frontBundle | default "blog" }}{{$baseurl := .Site.BaseURL}}
 <!-- <div class="container p-8 mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8"> -->
 <!-- <div class="container max-w-screen-lg mx-auto px-6 py-12 grid md:grid-cols-3 gap-4 lg:gap-8 items-center"> -->
+<h1 class="container px-6 pt-6 mx-auto max-w-5xl text-2xl font-bold anooptube-blogtitle-fontFamily-Michroma">Playlists:</h1>
+<div class="container p-4 mx-auto max-w-5xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-4">
+    {{ range $key, $value := .Site.Taxonomies.playlists }}
+    <div class="rounded anooptube-corner-rad shadow bg-blue-100 text-gray-900 dark:bg-gray-900 dark:text-white text-sm px-12 py-4">
+        <a href="{{ $baseurl  }}categories/{{ $key | urlize  }}">{{ $key | humanize }} ({{ len $value }}) </a>
+    </div>
+    {{ end }}
+</div>
+
+<h1 class="container px-6 pt-6 mx-auto max-w-5xl text-2xl font-bold anooptube-blogtitle-fontFamily-Michroma">Latest Uploads:</h1>
 <div class="container p-4 mx-auto max-w-5xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-4">
     {{ range first 6 (where .Site.RegularPages.ByDate.Reverse "Type" $frontBundle) }} {{- partial "blog-card.html" . -}} {{ end }}
 </div>
+
 
 {{ if gt (len (where .Site.RegularPages.ByDate.Reverse "Type" $frontBundle)) 6 }}
 <div class="text-center mb-8">

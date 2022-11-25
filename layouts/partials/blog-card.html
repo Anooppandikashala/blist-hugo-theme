@@ -10,7 +10,13 @@
     {{ end }}
   </div>
   {{ end }}
+  {{ if .Params.thumbnail }}
   <div class="my-1 text-xl font-regular">{{ .Params.title }}</div>
+  {{ end }}
+  {{ if not .Params.thumbnail }}
+  <!-- <div class="my-1 text-xl font-regular ">{{ .Params.title }}</div> -->
+  <div class="rounded anooptube-corner-rad shadow bg-blue-100 text-gray-900 dark:bg-gray-900 dark:text-white text-xl font-regular anooptube-padding">{{ .Params.title }}</div>
+  {{ end }}
   <div class="font-light ">{{ .Params.description }}</div>
 </a> {{ if not (or (or .Site.Params.hideOtherLanguages .Params.hideOtherLanguages) false) }} {{ if .IsTranslated -}}
     <div style="font-style: italic;font-size: smaller;">

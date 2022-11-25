@@ -84,3 +84,12 @@ body {
 .anooptube-blogtitle-fontFamily-Playball {
     font-family: 'Playball', cursive !important;
 }
+
+.anooptube-corner-rad {
+    border-radius: 1rem !important;
+}
+
+.anooptube-padding {
+    padding: 10px !important;
+    text-align: center;
+}
