@@ -93,3 +93,15 @@ body {
     padding: 10px !important;
     text-align: center;
 }
+
+.anooptube-text-align-center {
+    text-align: center;
+}
+
+.anooptube-letter-spacing-for-michroma {
+    letter-spacing: 0.05em;
+}
+
+.anooptube-word-spacing-for-michroma {
+    word-spacing: 0.5rem;
+}
