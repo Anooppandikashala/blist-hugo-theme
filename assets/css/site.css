@@ -105,3 +105,7 @@ body {
 .anooptube-word-spacing-for-michroma {
     word-spacing: 0.5rem;
 }
+
+.anooptube-ad-horizontal-height {
+    height: 100px !important;
+}
