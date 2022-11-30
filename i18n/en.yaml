@@ -70,3 +70,6 @@
 # Related posts
 - id: seeAlso
   translation: "See also"
+
+- id: showMore
+  translation: "Show more"

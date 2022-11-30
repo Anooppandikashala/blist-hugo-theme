@@ -109,3 +109,10 @@ body {
 .anooptube-ad-horizontal-height {
     height: 100px !important;
 }
+
+mark {
+    padding: 0.25rem !important;
+    border-radius: 0.4rem !important;
+    border-color: rgb(0, 0, 0) !important;
+    text-decoration: none !important;
+}
