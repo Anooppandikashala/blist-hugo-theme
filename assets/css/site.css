@@ -116,3 +116,36 @@ mark {
     border-color: rgb(0, 0, 0) !important;
     text-decoration: none !important;
 }
+
+div.highlight button {
+    color: #adb5bd !important;
+    box-sizing: border-box !important;
+    transition: 0.2s ease-out !important;
+    cursor: pointer !important;
+    user-select: none !important;
+    background: rgba(0, 0, 0, 0.15) !important;
+    border: 1px solid rgba(0, 0, 0, 0) !important;
+    padding: 5px 10px !important;
+    font-size: 0.8em !important;
+    position: absolute !important;
+    top: 0px !important;
+    right: 0px !important;
+    z-index: 100;
+    border-radius: 0 0.15rem !important;
+}
+
+div.highlight {
+    position: relative !important;
+}
+
+.custom-tooltip {
+    display: none;
+    width: fit-content;
+    padding: 5px 5px;
+    background-color: #000000df;
+    border-radius: 4px;
+    color: #fff;
+    position: absolute !important;
+    top: 0px !important;
+    right: 50px !important;
+}
