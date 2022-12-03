@@ -149,3 +149,8 @@ div.highlight {
     top: 0px !important;
     right: 50px !important;
 }
+
+.anooptube-sticky {
+    /* position: sticky !important;
+    top: 0 !important; */
+}
