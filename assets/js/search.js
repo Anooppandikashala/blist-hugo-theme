@@ -125,6 +125,10 @@ function loadSearch() {
       keys: [
         'title',
         'permalink',
+        'contents',
+        'tags',
+        'description',
+        'permalink',
         'contents'
       ]
     };
@@ -156,12 +160,18 @@ function executeSearch(term) {
       searchResultsHeading.classList.remove('hidden');
     }
 
-    for (let item in results.slice(0, 5)) { // only show first 5 results
-      const title = '<div class="text-2xl mb-2 font-bold">' + results[item].item.title + '</div>';
+    for (let item in results.slice(0, 10)) { // only show first 5 results
+      const title = '<div class="text-xl mb-2 font-regular">' + results[item].item.title + '</div>';
       const date = results[item].item.date ? '<div><em class="">' + new Date(results[item].item.date).toUTCString().substring(0, 16) + '</em></div>' : '';
-      const contents = '<div>' + results[item].item.contents + '</div>';
+      // const contents = '<div>' + results[item].item.contents + '</div>';
+      // const contents = '<div>' + results[item].item.descriptions + '</div>';
+      const contents = '<div class="font-light">' + results[item].item.tags + '</div>';
+      const myContent = title + date + contents;
+      const myDiv = '<div class="rounded anooptube-corner-rad shadow bg-blue-100 text-gray-900 dark:bg-gray-900 dark:text-white text-lg px-12 py-4 anooptube-margin-for-search-result">' + myContent + '</div>';
+      searchitems = searchitems + '<li><a href="' + results[item].item.permalink + '" tabindex="0">' + myDiv + '</a></li>';
+   
 
-      searchitems = searchitems + '<li><a class="block mb-2 px-4 py-2 rounded pb-2 border-b border-gray-200 dark:border-gray-600 focus:bg-gray-100 dark:focus:bg-gray-700 focus:outline-none" href="' + results[item].item.permalink + '" tabindex="0">' + title + date + contents + '</a></li>';
+      // searchitems = searchitems + '<li><a class="block mb-2 px-4 py-2 rounded pb-2 border-b border-gray-200 dark:border-gray-600 focus:bg-gray-100 dark:focus:bg-gray-700 focus:outline-none" href="' + results[item].item.permalink + '" tabindex="0">' + title + date + contents + '</a></li>';
     }
     resultsAvailable = true;
   }

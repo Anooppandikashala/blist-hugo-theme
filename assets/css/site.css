@@ -154,3 +154,16 @@ div.highlight {
     /* position: sticky !important;
     top: 0 !important; */
 }
+
+.anooptube-margin-for-search-result
+{
+    margin-bottom: 0.4rem;
+}
+
+
+.anooptube-margin-for-search-result:focus
+{
+    outline-width: 1px;
+  outline-style: dashed;
+  outline-color: red;
+}
