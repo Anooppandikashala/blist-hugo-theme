@@ -89,6 +89,10 @@ body {
     border-radius: 1rem !important;
 }
 
+.anooptube-corner-rad-05 {
+    border-radius: 0.5rem !important;
+}
+
 .anooptube-padding {
     padding: 10px !important;
     text-align: center;

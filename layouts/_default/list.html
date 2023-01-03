@@ -1,20 +1,24 @@
 {{ define "main" }}
 
-<h1 class="container px-6 pt-6 mx-auto max-w-5xl text-2xl font-bold anooptube-blogtitle-fontFamily-Michroma anooptube-letter-spacing-for-michroma">{{ .Title }}:</h1>
+<h1 class="container px-6 pt-6 mx-auto max-w-6xl text-2xl font-bold anooptube-blogtitle-fontFamily-Michroma anooptube-letter-spacing-for-michroma">{{ .Title }}:</h1>
 
-<div class="container mx-auto max-w-5xl anooptube-ad-horizontal-height">
+<div class="container mx-auto max-w-6xl anooptube-ad-horizontal-height">
     {{- partial "ads-for-footer-page.html" . -}}
 </div>
 
-{{ $paginator := .Paginate .Pages.ByDate.Reverse 9 }}
-<div class="container p-6 mx-auto max-w-5xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8">
-    <!-- <div class="container max-w-screen-lg mx-auto px-6 py-12 grid md:grid-cols-3 gap-4 lg:gap-16 items-center"></div> -->
-    {{ range $index, $page := $paginator.Pages }} 
-    <!-- {{ if eq (mod $index 3) 0 }}
-    {{- partial "article-ad-1.html" . -}}
-    {{ end }} -->
-    {{- partial "blog-card.html" . -}} 
-    {{ end }}
-</div>
+<div class="container p-6 mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:grid-cols-4 gap-2 lg:gap-4">
 
+    {{ $paginator := .Paginate .Pages.ByDate.Reverse 9 }}
+    <div class="col-span-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 lg:gap-4">
+        <!-- <div class="container max-w-screen-lg mx-auto px-6 py-12 grid md:grid-cols-3 gap-4 lg:gap-16 items-center"></div> -->
+        {{ range $index, $page := $paginator.Pages }} 
+        <!-- {{ if eq (mod $index 3) 0 }}
+        {{- partial "article-ad-1.html" . -}}
+        {{ end }} -->
+        {{- partial "blog-card.html" . -}} 
+        {{ end }}
+        
+    </div>
+    {{- partial "widgets.html" . -}}
+</div>
 {{- partial "pagination.html" . -}}{{- partial "social.html" . -}} {{ end }}
