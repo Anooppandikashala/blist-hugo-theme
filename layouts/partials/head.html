@@ -7,11 +7,19 @@
     <title>
         {{ if not .IsHome }}{{ .Title }} - {{ end }}{{ site.Title }}
     </title>
-    <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{if .IsPage}}{{ .Summary }}{{ else }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ end }}{{ end -}}" /> {{- if .Keywords }}
-    <meta name="keywords" content="{{ delimit .Keywords " , " }}" /> {{ end -}} {{- if .Params.Author }}
-    <meta name="author" content="{{ .Params.Author}}" /> {{ end -}} {{ hugo.Generator }} {{- $styles := resources.Get "css/styles.css" | postCSS (dict "config" "./assets/css/postcss.config.js") -}} {{- if .Site.IsServer }}
-    <link rel="stylesheet" href="{{ $styles.RelPermalink }}" /> {{ else }} {{- $styles := $styles| minify | fingerprint | resources.PostProcess -}}
-    <link rel="stylesheet" href="{{ $styles.Permalink }}" integrity="{{ $styles.Data.Integrity }}" /> {{ end -}}
+    <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{if .IsPage}}{{ .Summary }}{{ else }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ end }}{{ end -}}" /> 
+    {{- if .Keywords }}
+    <meta name="keywords" content="{{ delimit .Keywords " , " }}" /> 
+    {{ end -}} 
+    {{- if .Params.Author }}
+    <meta name="author" content="{{ .Params.Author}}" /> 
+    {{ end -}} 
+    {{ hugo.Generator }} {{- $styles := resources.Get "css/styles.css" | postCSS (dict "config" "./assets/css/postcss.config.js") -}} 
+    {{- if .Site.IsServer }}
+    <link rel="stylesheet" href="{{ $styles.RelPermalink }}" /> 
+    {{ else }} {{- $styles := $styles| minify | fingerprint | resources.PostProcess -}}
+    <link rel="stylesheet" href="{{ $styles.Permalink }}" integrity="{{ $styles.Data.Integrity }}" /> 
+    {{ end -}}
 
     <!-- Google Fonts Start -->
 
@@ -59,6 +67,8 @@
     <!-- monetag ad -->
     <!-- Lovely tag Push Notifications-->
     <script src="https://upskittyan.com/pfe/current/tag.min.js?z=5887721" data-cfasync="false" async></script>
+
+    <!-- <script async="async" data-cfasync="false" src="//thubanoa.com/1?z=7118650"></script> -->
 
     <!-- Vignette Banner -->    
     <!-- {{- partial "vignette-ad-banner.html" . -}} -->
