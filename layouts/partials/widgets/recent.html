@@ -5,18 +5,28 @@
     <p class="text-xl text-center text-gray-700 py-5 dark:text-gray-300 font-bold">Recent Posts</p>
     <div class="mx-6">
         {{- range first $recent_num $recent }}
-        <a href="{{ .RelPermalink }}" class="">
-            <div
-                class="rounded anooptube-corner-rad-05 w-full block mt-3 bg-white hover:bg-gray-100 duration-200 dark:bg-warmgray-900 dark:text-gray-900 dark:hover:bg-warmgray-800">
-                <div class="px-2 ">
-                    <div class="text-gray-900 font-regular text-lg dark:text-gray-800">{{.Title}}</div>
-                    <p class="text-xs text-gray-600 flex items-center pb-1 dark:text-gray-400">
-                        <time><i class="fa-sharp fa-solid fa-timer"></i>{{.Date.Format "02/01/2006"}}</time>
-                    </p>
+            <a href="{{ .RelPermalink }}" class="">
+                <div
+                    class="rounded anooptube-corner-rad-05 w-full block mt-3 bg-white hover:bg-gray-100 duration-200 dark:bg-warmgray-900 dark:text-gray-900 dark:hover:bg-warmgray-800">
+                    <div class="px-2 ">
+                        <div class="text-gray-900 font-regular text-lg dark:text-gray-800">{{.Title}}</div>
+                        <p class="text-xs text-gray-600 flex items-center pb-1 dark:text-gray-400">
+                            <time><i class="fa-sharp fa-solid fa-timer"></i>{{.Date.Format "02/01/2006"}}</time>
+                        </p>
+                    </div>
                 </div>
-            </div>
-        </a>
+            </a>
         {{- end }}
+        <script type="text/javascript">
+            atOptions = {
+                'key' : '7bcf1a30bafb5e9c097af1c911fd1119',
+                'format' : 'iframe',
+                'height' : 250,
+                'width' : 300,
+                'params' : {}
+            };
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/7bcf1a30bafb5e9c097af1c911fd1119/invoke.js"></script>
     </div>
 </div>
 {{- end }}
