@@ -1,0 +1,58 @@
+<style>
+.youtube-thumbnail-container {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.youtube-thumbnail-container img.thumbnail {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform 0.3s ease;
+}
+
+.youtube-thumbnail-container .play-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  background: rgba(255, 0, 0, 0.8);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.youtube-thumbnail-container .play-button svg {
+  width: 32px;
+  height: 32px;
+  fill: white;
+}
+
+/* Hover Effects */
+.youtube-thumbnail-container:hover img.thumbnail {
+  transform: scale(1.05);
+}
+
+.youtube-thumbnail-container:hover .play-button {
+  transform: translate(-50%, -50%) scale(1.2);
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
+}
+</style>
+
+<a href="https://www.youtube.com/watch?v={{ .Get 0 }}" target="_blank" rel="noopener noreferrer">
+  <div class="youtube-thumbnail-container">
+    <img class="thumbnail" src="https://img.youtube.com/vi/{{ .Get 0 }}/0.jpg" alt="YouTube video thumbnail">
+    <div class="play-button">
+      <svg viewBox="0 0 24 24">
+        <path d="M8 5v14l11-7z" />
+      </svg>
+    </div>
+  </div>
+</a>

@@ -8,7 +8,7 @@
 <div class="container p-4 mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 lg:gap-4">
     {{ range $key, $value := .Site.Taxonomies.playlists }}
     <div class="rounded anooptube-corner-rad shadow bg-blue-100 text-gray-900 dark:bg-gray-900 dark:text-white text-lg px-12 py-4 anooptube-text-align-center">
-        <a href="{{ $baseurl  }}playlists/{{ $key | urlize  }}">{{ $key | humanize }} ({{ len $value }}) </a>
+        <a href="/playlists/{{ $key | urlize  }}">{{ $key | humanize }} ({{ len $value }}) </a>
     </div>
     {{ end }}
 </div>
