@@ -7,10 +7,13 @@
     <title>
         {{ if not .IsHome }}{{ .Title }} - {{ end }}{{ site.Title }}
     </title>
-    <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{if .IsPage}}{{ .Summary }}{{ else }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ end }}{{ end -}}" /> 
+    <meta name="description" content="{{.Params.Meta}} {{ with .Description }}{{ . }}{{ else }}{{if .IsPage}}{{ .Summary }}{{ else }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ end }}{{ end -}}" /> 
     {{- if .Keywords }}
     <meta name="keywords" content="{{ delimit .Keywords " , " }}" /> 
-    {{ end -}} 
+    {{ end -}}
+    {{- if .Params.Mykeywords }}
+    <meta name="keywords" content="{{ .Params.Mykeywords}}" /> 
+    {{ end -}}  
     {{- if .Params.Author }}
     <meta name="author" content="{{ .Params.Author}}" /> 
     {{ end -}} 
