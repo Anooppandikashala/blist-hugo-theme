@@ -1,0 +1,62 @@
+{{ $playlist := "" }}
+{{ if .Params.playlists }}{{ $playlist = index .Params.playlists 0 }}{{ end }}
+{{ if $playlist }}
+    {{ $termKey := $playlist | urlize }}
+    {{ $termPages := index .Site.Taxonomies.playlists $termKey }}
+    {{ if $termPages }}
+        {{ $pages := $termPages.Pages.ByDate }}
+        {{ $currentPermalink := .Permalink }}
+        {{ $prev := false }}
+        {{ $next := false }}
+        {{ $found := false }}
+        {{ range $pages }}
+            {{ if $found }}
+                {{ if not $next }}{{ $next = . }}{{ end }}
+            {{ end }}
+            {{ if eq .Permalink $currentPermalink }}
+                {{ $found = true }}
+            {{ end }}
+            {{ if not $found }}
+                {{ $prev = . }}
+            {{ end }}
+        {{ end }}
+
+        {{ if or $prev $next }}
+        <div class="post-nav">
+
+            {{ if $prev }}
+            <a href="{{ $prev.RelPermalink }}" class="post-nav-link">
+                <span class="post-nav-label">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <line x1="19" y1="12" x2="5" y2="12"/>
+                        <polyline points="12 19 5 12 12 5"/>
+                    </svg>
+                    Previous
+                </span>
+                <span class="post-nav-playlist">{{ $playlist }}</span>
+                <span class="post-nav-title">{{ $prev.Title }}</span>
+            </a>
+            {{ else }}
+            <div></div>
+            {{ end }}
+
+            {{ if $next }}
+            <a href="{{ $next.RelPermalink }}" class="post-nav-link post-nav-next">
+                <span class="post-nav-label">
+                    Next
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                        <polyline points="12 5 19 12 12 19"/>
+                    </svg>
+                </span>
+                <span class="post-nav-playlist">{{ $playlist }}</span>
+                <span class="post-nav-title">{{ $next.Title }}</span>
+            </a>
+            {{ end }}
+
+        </div>
+        {{ end }}
+    {{ end }}
+{{ end }}

@@ -1,32 +1,49 @@
 {{ $recent := where .Site.RegularPages "Type" "in" site.Params.mainSections }}
 {{ $recent_num := (5 | default 10) }}
 {{- if $recent }}
-<div class="rounded anooptube-corner-rad bg-white panel mb-3 pb-5 {{ .Site.Params.ascentColor | default " bg-pink-50 " }} dark:bg-gray-900">
-    <p class="text-xl text-center text-gray-700 py-5 dark:text-gray-300 font-bold">Recent Posts</p>
-    <div class="mx-6">
-        {{- range first $recent_num $recent }}
-            <a href="{{ .RelPermalink }}" class="">
-                <div
-                    class="rounded anooptube-corner-rad-05 w-full block mt-3 bg-white hover:bg-gray-100 duration-200 dark:bg-warmgray-900 dark:text-gray-900 dark:hover:bg-warmgray-800">
-                    <div class="px-2 ">
-                        <div class="text-gray-900 font-regular text-lg dark:text-gray-800">{{.Title}}</div>
-                        <p class="text-xs text-gray-600 flex items-center pb-1 dark:text-gray-400">
-                            <time><i class="fa-sharp fa-solid fa-timer"></i>{{.Date.Format "02/01/2006"}}</time>
-                        </p>
-                    </div>
-                </div>
-            </a>
-        {{- end }}
-        <script type="text/javascript">
-            atOptions = {
-                'key' : '7bcf1a30bafb5e9c097af1c911fd1119',
-                'format' : 'iframe',
-                'height' : 250,
-                'width' : 300,
-                'params' : {}
-            };
-        </script>
-        <script type="text/javascript" src="//www.highperformanceformat.com/7bcf1a30bafb5e9c097af1c911fd1119/invoke.js"></script>
+<div class="recent-widget">
+
+    <div class="recent-widget-header">
+        <span class="recent-widget-title anooptube-blogtitle-fontFamily-Michroma">Recent Posts</span>
+        <div class="recent-widget-line"></div>
     </div>
+
+    {{- range first $recent_num $recent }}
+    <a href="{{ .RelPermalink }}" class="recent-post-item">
+
+        {{ if .Params.thumbnail }}
+        <img class="recent-post-thumb" src="/{{ .Params.thumbnail }}" alt="{{ .Title }}" loading="lazy" />
+        {{ else }}
+        <div class="recent-post-thumb-placeholder">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M14 3v4a1 1 0 0 0 1 1h4"/>
+                <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/>
+            </svg>
+        </div>
+        {{ end }}
+
+        <div class="recent-post-info">
+            <div class="recent-post-title">{{ .Title }}</div>
+            <div class="recent-post-date">
+                {{ partial "date.html" (dict "date" .Date "language" $.Page.Language "format" "short") }}
+            </div>
+        </div>
+
+    </a>
+    {{- end }}
+
 </div>
+
+<script type="text/javascript">
+    atOptions = {
+        'key' : '7bcf1a30bafb5e9c097af1c911fd1119',
+        'format' : 'iframe',
+        'height' : 250,
+        'width' : 300,
+        'params' : {}
+    };
+</script>
+<script type="text/javascript" src="//www.highperformanceformat.com/7bcf1a30bafb5e9c097af1c911fd1119/invoke.js"></script>
+
 {{- end }}

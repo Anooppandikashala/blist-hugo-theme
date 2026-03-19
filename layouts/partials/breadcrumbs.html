@@ -1,0 +1,13 @@
+<nav class="post-breadcrumbs" aria-label="Breadcrumb">
+    <a href="{{ "/" | relLangURL }}">Home</a>
+    <span class="post-breadcrumbs-sep">›</span>
+    <a href="{{ "/blog" | relLangURL }}">Blog</a>
+    {{ $playlist := "" }}
+    {{ if .Params.playlists }}{{ $playlist = index .Params.playlists 0 }}{{ end }}
+    {{ if $playlist }}
+    <span class="post-breadcrumbs-sep">›</span>
+    <a href="{{ printf "/playlists/%s" ($playlist | urlize) | relLangURL }}">{{ $playlist }}</a>
+    {{ end }}
+    <span class="post-breadcrumbs-sep">›</span>
+    <span class="post-breadcrumbs-current" title="{{ .Title }}">{{ .Title }}</span>
+</nav>

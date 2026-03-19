@@ -28,6 +28,9 @@
   </div>
 </div>
 
+<!-- Hidden trigger kept for search.js compatibility (keyboard ⌘/) -->
+<span class="open-search" style="display:none" aria-hidden="true"></span>
+
 {{ $fuse := resources.Get "js/fuse.min.js" }}
 {{ $search := resources.Get "js/search.js" }}
 

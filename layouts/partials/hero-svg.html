@@ -1,0 +1,179 @@
+<svg viewBox="0 0 480 440" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full" style="max-height:460px;">
+  <defs>
+    <radialGradient id="hero-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#4f46e5" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#4f46e5" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Clip everything to the card's rounded rect -->
+    <clipPath id="card-clip">
+      <rect x="18" y="28" width="444" height="372" rx="16"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background glow blob -->
+  <ellipse cx="240" cy="218" rx="220" ry="190" fill="url(#hero-glow)"/>
+
+  <!-- Decorative dots — top right -->
+  <circle cx="464" cy="42" r="3.5" fill="#4f46e5" opacity="0.35"/>
+  <circle cx="476" cy="58" r="2.5" fill="#4f46e5" opacity="0.22"/>
+  <circle cx="454" cy="62" r="2"   fill="#6366f1" opacity="0.20"/>
+  <circle cx="472" cy="24" r="2"   fill="#6366f1" opacity="0.28"/>
+
+  <!-- Decorative dots — bottom left -->
+  <circle cx="14"  cy="394" r="3"   fill="#0ea5e9" opacity="0.30"/>
+  <circle cx="4"   cy="410" r="2"   fill="#0ea5e9" opacity="0.20"/>
+  <circle cx="28"  cy="412" r="2.5" fill="#0ea5e9" opacity="0.20"/>
+
+  <!-- Floating badge: </> -->
+  <rect x="386" y="6"   width="88" height="32" rx="9" fill="#1e1b4b"/>
+  <text x="430" y="27"  font-family="Courier New,Courier,monospace" font-size="14" fill="#818cf8" text-anchor="middle" font-weight="600">&lt;/&gt;</text>
+
+  <!-- Floating badge: {} -->
+  <rect x="4"   y="370" width="76" height="30" rx="8" fill="#0c2233"/>
+  <text x="42"  y="390" font-family="Courier New,Courier,monospace" font-size="13" fill="#38bdf8" text-anchor="middle">{ }</text>
+
+  <!-- Floating badge: ; -->
+  <rect x="414" y="394" width="52" height="28" rx="8" fill="#16102e"/>
+  <text x="440" y="413" font-family="Courier New,Courier,monospace" font-size="17" fill="#a78bfa" text-anchor="middle">;</text>
+
+  <!-- Card shadow -->
+  <rect x="26" y="36" width="444" height="372" rx="16" fill="black" opacity="0.20"/>
+  <!-- Card body -->
+  <rect x="18" y="28" width="444" height="372" rx="16" fill="#0d1117"/>
+
+  <!-- Everything inside the card is clipped -->
+  <g clip-path="url(#card-clip)" font-family="Courier New,Courier,monospace">
+
+    <!-- ── TITLE BAR ── -->
+    <rect x="18" y="28" width="444" height="44" fill="#161b22"/>
+
+    <!-- Traffic lights -->
+    <circle cx="42" cy="50" r="6" fill="#ff5f56"/>
+    <circle cx="62" cy="50" r="6" fill="#ffbd2e"/>
+    <circle cx="82" cy="50" r="6" fill="#27c93f"/>
+
+    <!-- File tab -->
+    <rect x="102" y="34" width="96" height="26" rx="6" fill="#0d1117"/>
+    <circle cx="114" cy="47" r="3" fill="#79c0ff" opacity="0.6"/>
+    <text x="158" y="52" font-size="11" fill="#8b949e" text-anchor="middle">tutorial.py</text>
+
+    <!-- ── GUTTER ── -->
+    <line x1="60" y1="72" x2="60" y2="400" stroke="#21262d" stroke-width="1"/>
+
+    <!--
+      Line numbers — right-aligned to x=52.
+      Lines: 1–11, y starting at 100, spacing 22px.
+    -->
+    <text font-size="11" fill="#3d4450" text-anchor="end">
+      <tspan x="52" y="100">1</tspan>
+      <tspan x="52" dy="22">2</tspan>
+      <tspan x="52" dy="22">3</tspan>
+      <tspan x="52" dy="22">4</tspan>
+      <tspan x="52" dy="22">5</tspan>
+      <tspan x="52" dy="22">6</tspan>
+      <tspan x="52" dy="22">7</tspan>
+      <tspan x="52" dy="22">8</tspan>
+      <tspan x="52" dy="22">9</tspan>
+      <tspan x="52" dy="22">10</tspan>
+      <tspan x="52" dy="22">11</tspan>
+    </text>
+
+    <!-- Active line highlight (line 11, y=320) -->
+    <rect x="60" y="309" width="402" height="22" fill="#161b22"/>
+
+    <!--
+      ── CODE ──
+      Font: Courier New 13px → char width = 8px
+      Base x = 68
+      L1 indent (4 sp) = x 100
+      L2 indent (8 sp) = x 132
+      L3 indent (12 sp)= x 164
+      Each tspan uses absolute x,y — no relying on spaces for alignment.
+    -->
+
+    <!-- Line 1: import sys -->
+    <text font-size="13">
+      <tspan x="68"  y="100" fill="#ff7b72">import</tspan>
+      <tspan x="116" y="100" fill="#c9d1d9"> sys</tspan>
+    </text>
+
+    <!-- Line 2: blank -->
+
+    <!-- Line 3: class Tutorial: -->
+    <text font-size="13">
+      <tspan x="68"  y="144" fill="#ff7b72">class </tspan>
+      <tspan x="116" y="144" fill="#79c0ff">Tutorial</tspan>
+      <tspan x="180" y="144" fill="#c9d1d9">:</tspan>
+    </text>
+
+    <!-- Line 4:     topics = [ -->
+    <text font-size="13">
+      <tspan x="100" y="166" fill="#c9d1d9">topics </tspan>
+      <tspan x="156" y="166" fill="#ff7b72">=</tspan>
+      <tspan x="164" y="166" fill="#c9d1d9"> [</tspan>
+    </text>
+
+    <!-- Line 5:         "Python", "C++", -->
+    <text font-size="13">
+      <tspan x="132" y="188" fill="#a5d6ff">"Python"</tspan>
+      <tspan x="196" y="188" fill="#c9d1d9">, </tspan>
+      <tspan x="212" y="188" fill="#a5d6ff">"C++"</tspan>
+      <tspan x="252" y="188" fill="#c9d1d9">,</tspan>
+    </text>
+
+    <!-- Line 6:         "Java", "Git" -->
+    <text font-size="13">
+      <tspan x="132" y="210" fill="#a5d6ff">"Java"</tspan>
+      <tspan x="180" y="210" fill="#c9d1d9">, </tspan>
+      <tspan x="196" y="210" fill="#a5d6ff">"Git"</tspan>
+    </text>
+
+    <!-- Line 7:     ] -->
+    <text font-size="13">
+      <tspan x="100" y="232" fill="#c9d1d9">]</tspan>
+    </text>
+
+    <!-- Line 8: blank -->
+
+    <!-- Line 9:     def run(self): -->
+    <text font-size="13">
+      <tspan x="100" y="276" fill="#ff7b72">def </tspan>
+      <tspan x="132" y="276" fill="#79c0ff">run</tspan>
+      <tspan x="156" y="276" fill="#c9d1d9">(self):</tspan>
+    </text>
+
+    <!-- Line 10:         for t in self.topics: -->
+    <text font-size="13">
+      <tspan x="132" y="298" fill="#ff7b72">for </tspan>
+      <tspan x="164" y="298" fill="#ffa657">t </tspan>
+      <tspan x="180" y="298" fill="#ff7b72">in </tspan>
+      <tspan x="204" y="298" fill="#c9d1d9">self.topics:</tspan>
+    </text>
+
+    <!-- Line 11:             print(t)  ← active line -->
+    <text font-size="13">
+      <tspan x="164" y="320" fill="#d2a8ff">print</tspan>
+      <tspan x="204" y="320" fill="#c9d1d9">(</tspan>
+      <tspan x="212" y="320" fill="#ffa657">t</tspan>
+      <tspan x="220" y="320" fill="#c9d1d9">)</tspan>
+    </text>
+
+    <!-- ── TERMINAL ── -->
+    <rect x="18" y="342" width="444" height="58" fill="#010409"/>
+
+    <!-- Prompt -->
+    <text font-size="11.5">
+      <tspan x="30" y="362" fill="#3fb950">$ </tspan>
+      <tspan x="46" y="362" fill="#8b949e">python tutorial.py</tspan>
+    </text>
+
+    <!-- Output -->
+    <text x="30" y="381" font-size="11" fill="#56d364">Python  C++  Java  Git</text>
+
+    <!-- Blinking cursor (after 22 chars of output: x = 30 + 22×8 = 206) -->
+    <rect x="206" y="370" width="7" height="12" fill="#56d364">
+      <animate attributeName="opacity" values="1;0;1" dur="1.1s" repeatCount="indefinite"/>
+    </rect>
+
+  </g><!-- /clip -->
+</svg>

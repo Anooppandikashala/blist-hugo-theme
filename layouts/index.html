@@ -1,19 +1,24 @@
-{{ define "main" }} {{- partial "intro.html" . -}} {{ $frontBundle := .Site.Params.frontBundle | default "blog" }}{{$baseurl := .Site.BaseURL}}
-<!-- <div class="container p-8 mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8"> -->
-<!-- <div class="container max-w-screen-lg mx-auto px-6 py-12 grid md:grid-cols-3 gap-4 lg:gap-8 items-center"> -->
-<!-- <div class="container mx-auto max-w-6xl anooptube-ad-horizontal-height">
-    {{- partial "ads-for-footer-page.html" . -}}
-</div> -->
-<h2 class="container px-6 pt-6 mx-auto max-w-6xl text-xl font-bold anooptube-blogtitle-fontFamily-Michroma anooptube-letter-spacing-for-michroma">Playlists:</h2>
-<div class="container p-4 mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 lg:gap-4">
-    {{ range $key, $value := .Site.Taxonomies.playlists }}
-    <div class="rounded anooptube-corner-rad shadow bg-blue-100 text-gray-900 dark:bg-gray-900 dark:text-white text-lg px-12 py-4 anooptube-text-align-center">
-        <a href="/playlists/{{ $key | urlize  }}">{{ $key | humanize }} ({{ len $value }}) </a>
-    </div>
-    {{ end }}
+{{ define "main" }}
+{{- partial "intro.html" . -}}
+{{ $frontBundle := .Site.Params.frontBundle | default "blog" }}
+
+<div class="container px-6 pt-8 pb-2 mx-auto max-w-6xl section-header">
+    <h2 class="text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 anooptube-blogtitle-fontFamily-Michroma anooptube-letter-spacing-for-michroma whitespace-nowrap">Playlists</h2>
+    <div class="section-header-line"></div>
 </div>
 
-<div class="container p-4 mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 lg:gap-4">
+<div class="container mx-auto max-w-6xl pb-6 playlist-scroll-outer">
+    <div class="playlist-scroll-row px-6">
+        {{ range $key, $value := .Site.Taxonomies.playlists }}
+        <a href="/playlists/{{ $key | urlize }}" class="playlist-chip">
+            <span class="playlist-chip-name">{{ $key | humanize }}</span>
+            <span class="playlist-chip-count">{{ len $value }}</span>
+        </a>
+        {{ end }}
+    </div>
+</div>
+
+<div class="container mx-auto max-w-6xl px-6 pb-4">
     <div class="ad-container">
         <script type="text/javascript">
             atOptions = {
@@ -28,17 +33,30 @@
     </div>
 </div>
 
-<h2 class="container px-6 pt-6 mx-auto max-w-6xl text-xl font-bold anooptube-blogtitle-fontFamily-Michroma anooptube-letter-spacing-for-michroma anooptube-word-spacing-for-michroma">Latest Uploads:</h2>
-<div class="container p-4 mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-4">
-    {{ range first 6 (where .Site.RegularPages.ByDate.Reverse "Type" $frontBundle) }} {{- partial "blog-card.html" . -}} {{ end }}
+<div class="container px-6 pt-4 pb-2 mx-auto max-w-6xl section-header">
+    <h2 class="text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 anooptube-blogtitle-fontFamily-Michroma anooptube-letter-spacing-for-michroma whitespace-nowrap">Latest Uploads</h2>
+    <div class="section-header-line"></div>
 </div>
 
+<div class="container px-6 pb-8 mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    {{ range first 6 (where .Site.RegularPages.ByDate.Reverse "Type" $frontBundle) }}
+    {{- partial "blog-card.html" . -}}
+    {{ end }}
+</div>
 
 {{ if gt (len (where .Site.RegularPages.ByDate.Reverse "Type" $frontBundle)) 6 }}
-<div class="text-center mb-8">
-    <a class="px-8 py-3 rounded transition-colors {{ .Site.Params.ascentColor | default " bg-pink-50 " }}
-      text-gray-500 hover:text-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:text-white" href="{{ (index (.Site.Menus.main) 1).URL | absLangURL }}" lang="{{ .Lang }}">
-      {{ i18n "showMore" }}
+<div class="text-center mb-12">
+    <a class="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 text-sm font-medium hover:border-gray-400 dark:hover:border-gray-500 hover:text-gray-900 dark:hover:text-white transition-all"
+       href="{{ (index (.Site.Menus.main) 1).URL | absLangURL }}" lang="{{ .Lang }}">
+        {{ i18n "showMore" }}
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <line x1="5" y1="12" x2="19" y2="12" />
+            <polyline points="12 5 19 12 12 19" />
+        </svg>
     </a>
 </div>
-{{ end }} {{- partial "social.html" . -}} {{ end }}
+{{ end }}
+
+{{- partial "social.html" . -}}
+{{ end }}

@@ -1,15 +1,14 @@
 {{ define "main" }} {{ $lastmodstr := (partial "date.html" (dict "date" .Lastmod "language" $.Page.Language "format" "long")) }} {{ $datestr := (partial "date.html" (dict "date" .Date "language" $.Page.Language "format" "long")) }} {{ if .Params.thumbnail
 }}
-<div class="relative max-w-6xl mx-auto px-4">
-
-    <div class="rounded-lg dark:bg-gray-900">
-        <img src="/{{ .Params.thumbnail }}" class="rounded-lg shadow-sm w-full object-contain h-70" /> {{ if not (or (or .Site.Params.hideMeta .Params.hideMeta) false) }}
+<div class="relative max-w-6xl mx-auto px-4 md:px-6">
+    <div class="rounded-xl overflow-hidden">
+        <img src="/{{ .Params.thumbnail }}" class="w-full object-contain" style="max-height: 28rem;" />
+        {{ if not (or (or .Site.Params.hideMeta .Params.hideMeta) false) }}
+        <div class="absolute top-4 right-8 rounded-md shadow-sm bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 text-xs font-medium px-2.5 py-1">
+            {{ $datestr }}
+        </div>
+        {{ end }}
     </div>
-
-    <div class="absolute top-4 right-8 rounded shadow bg-white text-gray-900 dark:bg-gray-900 dark:text-white px-2 py-0.5">
-        {{ $datestr }}
-    </div>
-    {{ end }}
 </div>
 {{ end }}
 
@@ -17,40 +16,71 @@
     {{- partial "ads-for-footer-page.html" . -}}
 </div> -->
 
-<div class="container p-6 mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:grid-cols-4 gap-2 lg:gap-4">
+<div class="container px-4 md:px-6 mx-auto max-w-6xl grid grid-cols-1 lg:grid-cols-4 gap-4 lg:gap-6">
     <div class="col-span-3">
 
-        <article class="prose lg:prose-lg anooptube-bg mx-auto my-8 dark:prose-dark px-4">
+        <article class="prose lg:prose-lg anooptube-bg mx-auto my-8 dark:prose-dark px-2 md:px-4">
 
-            <h2 class="text-xl font-semibold mb-1 anooptube-blogtitle anooptube-blogtitle-fontFamily-Michroma anooptube-letter-spacing-for-michroma anooptube-word-spacing-for-michroma">{{ .Title }}</h2>
+            {{- partial "breadcrumbs.html" . -}}
+
+            <h2 class="text-xl font-semibold mb-3 anooptube-blogtitle anooptube-blogtitle-fontFamily-Michroma anooptube-letter-spacing-for-michroma anooptube-word-spacing-for-michroma">{{ .Title }}</h2>
                 {{ if not (or (or .Site.Params.hideMeta .Params.hideMeta) false) }}
-                <h5 class="text-sm flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="mr-1" width="16" height="16" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <rect x="4" y="5" width="16" height="16" rx="2" />
-                <line x1="16" y1="3" x2="16" y2="7" />
-                <line x1="8" y1="3" x2="8" y2="7" />
-                <line x1="4" y1="11" x2="20" y2="11" />
-                <rect x="8" y="15" width="2" height="2" />
-                </svg> {{ $datestr | i18n "postedOnDate" }} {{ if ne $datestr $lastmodstr }} &nbsp{{ $lastmodstr | i18n "lastModified" }}</h5>
-                <h5 class="text-sm flex items-center">
-                    {{ else }} &nbsp;&bull;&nbsp; {{ end }}
-                    <svg xmlns="http://www.w3.org/2000/svg" class="mr-1" width="16" height="16" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <circle cx="12" cy="12" r="9" />
-                <polyline points="12 7 12 12 15 15" />
-                </svg> {{ i18n "readingTime"}}{{ .ReadingTime }}&nbsp;{{ i18n "readTime" }} &nbsp;&bull;
-                    <svg xmlns="http://www.w3.org/2000/svg" class="mx-1" width="16" height="16" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0" />
-                <path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0" />
-                <line x1="3" y1="6" x2="3" y2="19" />
-                <line x1="12" y1="6" x2="12" y2="19" />
-                <line x1="21" y1="6" x2="21" y2="19" />
-                </svg> {{ .WordCount }}&nbsp;{{ i18n "words" }} {{ if not (or (or .Site.Params.hideOtherLanguages .Params.hideOtherLanguages) false) }} {{ if .IsTranslated -}} {{- $sortedTranslations := sort .Translations "Site.Language.Weight" -}}
-                    {{- $links := apply $sortedTranslations "partial" "translation_link.html" "." -}} {{- $cleanLinks := apply $links "chomp" "." -}} {{- $linksOutput := delimit $cleanLinks (i18n "translationsSeparator") -}} &nbsp;&bull;&nbsp;{{ i18n "translationsLabel"
-                    }}&nbsp;{{ $linksOutput }} {{- end }} {{ end }}
-                </h5>
+                <div class="post-meta-strip">
+                    <!-- Date -->
+                    <span class="flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <rect x="4" y="5" width="16" height="16" rx="2"/>
+                            <line x1="16" y1="3" x2="16" y2="7"/>
+                            <line x1="8" y1="3" x2="8" y2="7"/>
+                            <line x1="4" y1="11" x2="20" y2="11"/>
+                        </svg>
+                        {{ $datestr }}
+                    </span>
+                    <!-- Reading time -->
+                    <span class="flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <circle cx="12" cy="12" r="9"/>
+                            <polyline points="12 7 12 12 15 15"/>
+                        </svg>
+                        {{ .ReadingTime }} min read
+                    </span>
+                    <!-- Word count -->
+                    <span class="flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0"/>
+                            <path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0"/>
+                            <line x1="3" y1="6" x2="3" y2="19"/>
+                            <line x1="12" y1="6" x2="12" y2="19"/>
+                            <line x1="21" y1="6" x2="21" y2="19"/>
+                        </svg>
+                        {{ .WordCount }} words
+                    </span>
+                    {{ if ne $datestr $lastmodstr }}
+                    <!-- Last modified -->
+                    <span class="flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z"/>
+                            <path d="M16 3v4"/>
+                            <path d="M8 3v4"/>
+                            <path d="M4 11h16"/>
+                            <path d="M11 15h1"/>
+                            <path d="M12 15v3"/>
+                        </svg>
+                        Updated {{ $lastmodstr }}
+                    </span>
+                    {{ end }}
+                    {{ if not (or (or .Site.Params.hideOtherLanguages .Params.hideOtherLanguages) false) }} {{ if .IsTranslated -}}
+                    {{- $sortedTranslations := sort .Translations "Site.Language.Weight" -}}
+                    {{- $links := apply $sortedTranslations "partial" "translation_link.html" "." -}}
+                    {{- $cleanLinks := apply $links "chomp" "." -}}
+                    {{- $linksOutput := delimit $cleanLinks (i18n "translationsSeparator") -}}
+                    <span>{{ i18n "translationsLabel" }} {{ $linksOutput }}</span>
+                    {{- end }} {{ end }}
+                </div>
                 {{ end }} 
                 <script type="text/javascript">
                     atOptions = {
@@ -63,13 +93,107 @@
                 </script>
                 <script type="text/javascript" src="//www.highperformanceformat.com/502480a173cea121c3fa59819e26fc88/invoke.js"></script>
                 {{ .Content }}
+
+                {{- partial "share.html" . -}}
+
+                {{- partial "post-nav.html" . -}}
         </article>
 
 
     </div>
-    {{- partial "widgets.html" . -}}
+
+    <!-- Sidebar -->
+    <div class="hidden lg:block lg:col-span-1">
+
+        {{ if .TableOfContents }}
+        <div class="toc-widget">
+            <div class="toc-widget-header">
+                <span class="toc-widget-title anooptube-blogtitle-fontFamily-Michroma">Contents</span>
+                <div class="toc-widget-line"></div>
+            </div>
+            {{ .TableOfContents }}
+        </div>
+        {{ end }}
+
+        {{ $root := . }}
+        {{ with (default .Site.Params.widgets.widgets .Params.widgets) -}}
+            {{ range $widget := . }}
+                {{ $p := printf "widgets/%s.html" $widget }}
+                {{ partial $p $root }}
+            {{ end }}
+        {{ end }}
+
+    </div>
 
 </div>
 
+<script>
+(function () {
+    var tocLinks = document.querySelectorAll('#TableOfContents a');
+    if (!tocLinks.length) return;
+
+    var headings = [];
+    tocLinks.forEach(function (link) {
+        var id = decodeURIComponent(link.getAttribute('href').substring(1));
+        var el = document.getElementById(id);
+        if (el) headings.push({ el: el, link: link });
+    });
+    if (!headings.length) return;
+
+    var activeLink = null;
+    function setActive(link) {
+        if (activeLink === link) return;
+        if (activeLink) activeLink.classList.remove('toc-active');
+        activeLink = link;
+        if (activeLink) {
+            activeLink.classList.add('toc-active');
+            // scroll the TOC link into view within the widget
+            var widget = document.querySelector('.toc-widget');
+            if (widget) {
+                var linkTop = activeLink.offsetTop;
+                var widgetScroll = widget.scrollTop;
+                var widgetHeight = widget.clientHeight;
+                if (linkTop < widgetScroll + 48 || linkTop > widgetScroll + widgetHeight - 48) {
+                    widget.scrollTo({ top: linkTop - widgetHeight / 2, behavior: 'smooth' });
+                }
+            }
+        }
+    }
+
+    // Set first heading active on load
+    setActive(headings[0].link);
+
+    var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+                var found = headings.find(function (h) { return h.el === entry.target; });
+                if (found) setActive(found.link);
+            }
+        });
+    }, { rootMargin: '-64px 0px -55% 0px', threshold: 0 });
+
+    headings.forEach(function (h) { observer.observe(h.el); });
+})();
+</script>
+
 <!-- {{- partial "article-ad-1.html" . -}}  -->
+
+{{ $related := first 3 (where (.Site.RegularPages.Related .) "Permalink" "ne" .Permalink) }}
+{{ if $related }}
+<div class="container px-4 md:px-6 mx-auto max-w-6xl py-10">
+
+    <div class="section-header mb-6">
+        <h2 class="text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 anooptube-blogtitle-fontFamily-Michroma anooptube-letter-spacing-for-michroma whitespace-nowrap">Related Posts</h2>
+        <div class="section-header-line"></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {{ range $related }}
+            {{- partial "blog-card.html" . -}}
+        {{ end }}
+    </div>
+
+</div>
+{{ end }}
+
 {{- partial "social.html" . -}} {{ end }}

@@ -1,19 +1,23 @@
-<footer class="container p-6 mx-auto max-w-6xl flex justify-between items-center">
-    <span class="text-sm font-light">
-    {{ if (isset .Site.Params "copyright") }}
-    {{ .Site.Params.copyright | safeHTML }}
-    {{ else }}
-    {{ dateFormat "2006" now }} © {{ .Site.Title }}
-    {{ end }}
-  </span>
-    <a href="{{ .Site.Home.Permalink }}privacy"><u>Privacy Policy</u></a>
-    <span onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="p-1 cursor-pointer">
-    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" stroke-width="1.5"
-      stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-      <path d="M18 15l-6 -6l-6 6h12" />
-    </svg>
-  </span>
+<footer class="border-t border-gray-100 dark:border-gray-800 mt-8">
+    <div class="container mx-auto max-w-6xl px-6 py-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <span class="text-sm text-gray-400 dark:text-gray-500">
+            {{ if (isset .Site.Params "copyright") }}
+            {{ .Site.Params.copyright | safeHTML }}
+            {{ else }}
+            {{ dateFormat "2006" now }} © {{ .Site.Title }}
+            {{ end }}
+        </span>
+        <div class="flex items-center gap-6 text-sm text-gray-400 dark:text-gray-500">
+            <a href="{{ .Site.Home.Permalink }}privacy" class="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Privacy Policy</a>
+            <span onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="cursor-pointer hover:text-gray-700 dark:hover:text-gray-300 transition-colors flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M18 15l-6 -6l-6 6h12" />
+                </svg>
+                Top
+            </span>
+        </div>
+    </div>
 </footer>
 
 {{ if .Site.Params.enableSearch }} {{- partial "search-ui.html" . -}} {{ end }} {{ template "_internal/google_analytics.html" . }} {{ if ge (len .Site.Languages) 3 }}
@@ -37,7 +41,7 @@
     const darkmode = document.querySelector('.toggle-dark-mode');
 
     const darkModeIcon = '<svg class="svg-icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M623.709091 46.545455C826.181818 97.745455 977.454545 283.927273 977.454545 505.018182 977.454545 765.672727 768 977.454545 512 977.454545 267.636364 977.454545 67.490909 786.618182 48.872727 542.254545c-2.327273-2.327273-2.327273-4.654545-2.327272-9.30909 0-16.290909 11.636364-27.927273 27.927272-27.927273 13.963636 0 23.272727 9.309091 27.927273 20.945454 51.2 123.345455 172.218182 209.454545 311.854545 209.454546 186.181818 0 337.454545-153.6 337.454546-344.436364 0-121.018182-60.509091-225.745455-153.6-288.581818-9.309091-4.654545-16.290909-16.290909-16.290909-25.6 0-16.290909 13.963636-30.254545 27.927273-30.254545h13.963636z"  /></svg>';
-    const lightModeIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"> <path stroke="none" d="M0 0h24v24H0z" fill="none" /> <circle cx="12" cy="12" r="3" /> <line x1="12" y1="5" x2="12" y2="5.01" /> <line x1="17" y1="7" x2="17" y2="7.01" /> <line x1="19" y1="12" x2="19" y2="12.01" /> <line x1="17" y1="17" x2="17" y2="17.01" /> <line x1="12" y1="19" x2="12" y2="19.01" /> <line x1="7" y1="17" x2="7" y2="17.01" /> <line x1="5" y1="12" x2="5" y2="12.01" /> <line x1="7" y1="7" x2="7" y2="7.01" /> </svg>';
+    const lightModeIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"> <path stroke="none" d="M0 0h24v24H0z" fill="none" /> <circle cx="12" cy="12" r="3" /> <line x1="12" y1="5" x2="12" y2="5.01" /> <line x1="17" y1="7" x2="17" y2="7.01" /> <line x1="19" y1="12" x2="19" y2="12.01" /> <line x1="17" y1="17" x2="17" y2="17.01" /> <line x1="12" y1="19" x2="12" y2="19.01" /> <line x1="7" y1="17" x2="7" y2="7.01" /> <line x1="5" y1="12" x2="5" y2="12.01" /> <line x1="7" y1="7" x2="7" y2="7.01" /> </svg>';
 
     function changeDarkModeLogoToLight() {
         document.getElementById("anooptube-dark-mode-toggle").innerHTML = lightModeIcon;
@@ -89,85 +93,91 @@
     const highlights = document.querySelectorAll("div.highlight")
 
     highlights.forEach(div => {
-        // create the copy button
         const copy = document.createElement("button")
         copy.innerHTML = 'Copy'
-
-        // copy.style.backgroundColor = "#235614"
-        // add the event listener to each click
         copy.addEventListener("click", handleCopyClick)
-            // append the copy button to each code block
 
         const spanCopy = document.createElement("span")
         spanCopy.innerHTML = 'Copied'
         spanCopy.setAttribute("class", "custom-tooltip")
-
 
         div.append(spanCopy)
         div.append(copy)
     });
 
     const copyToClipboard = str => {
-        const el = document.createElement("textarea") // Create a <textarea> element
-        el.value = str // Set its value to the string that you want copied
-        el.setAttribute("readonly", "") // Make it readonly to be tamper-proof
+        const el = document.createElement("textarea")
+        el.value = str
+        el.setAttribute("readonly", "")
         el.style.position = "absolute"
-        el.style.left = "-9999px" // Move outside the screen to make it invisible
-        document.body.appendChild(el) // Append the <textarea> element to the HTML document
+        el.style.left = "-9999px"
+        document.body.appendChild(el)
         const selected =
-            document.getSelection().rangeCount > 0 // Check if there is any content selected previously
+            document.getSelection().rangeCount > 0
             ?
-            document.getSelection().getRangeAt(0) // Store selection if found
+            document.getSelection().getRangeAt(0)
             :
-            false // Mark as false to know no selection existed before
-        el.select() // Select the <textarea> content
-        document.execCommand("copy") // Copy - only works as a result of a user action (e.g. click events)
-        document.body.removeChild(el) // Remove the <textarea> element
+            false
+        el.select()
+        document.execCommand("copy")
+        document.body.removeChild(el)
         if (selected) {
-            // If a selection existed before copying
-            document.getSelection().removeAllRanges() // Unselect everything on the HTML document
-            document.getSelection().addRange(selected) // Restore the original selection
+            document.getSelection().removeAllRanges()
+            document.getSelection().addRange(selected)
         }
-
     }
 
     function handleCopyClick(evt) {
-        // get the children of the parent element
-        const {
-            children
-        } = evt.target.parentElement
-            // grab the first element (we append the copy button on afterwards, so the first will be the code element)
-            // destructure the innerText from the code block
-        const {
-            innerText
-        } = Array.from(children)[0]
-            // copy all of the code to the clipboard
+        const { children } = evt.target.parentElement
+        const { innerText } = Array.from(children)[0]
         copyToClipboard(innerText)
-            // alert to show it worked, but you can put any kind of tooltip/popup to notify it worked
-            // alert(innerText)
 
         const parent = evt.target.parentElement
-        console.log(parent)
-
         var x = parent.getElementsByClassName('custom-tooltip')[0].style.display = 'block'
-
         setTimeout(function() {
             parent.getElementsByClassName('custom-tooltip')[0].style.display = "none";
         }, 1000);
-
-        // console.log(x)
-
-        // for (var i = 0; i < x.length; i += 1) {
-        //     x[i].style.display = 'block';
-        // }
-
-        // document.getElementById("custom-tooltip").style.display = "block";
-        // setTimeout(function() {
-        //     document.getElementById("custom-tooltip").style.display = "none";
-        // }, 1000);
     }
 </script>
 {{ end }}
+
+<script>
+    // Scroll progress bar
+    (function () {
+        var bar = document.getElementById('scroll-progress');
+        if (!bar) return;
+        function update() {
+            var scrollTop = window.scrollY || document.documentElement.scrollTop;
+            var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            bar.style.width = (docHeight > 0 ? (scrollTop / docHeight) * 100 : 0) + '%';
+        }
+        window.addEventListener('scroll', update, { passive: true });
+        update();
+    })();
+</script>
+
+<script>
+    // Drag-to-scroll for playlist row
+    const playlistRow = document.querySelector('.playlist-scroll-row');
+    if (playlistRow) {
+        let isDown = false, startX, scrollLeft;
+        playlistRow.addEventListener('mousedown', e => {
+            isDown = true;
+            playlistRow.style.cursor = 'grabbing';
+            startX = e.pageX - playlistRow.offsetLeft;
+            scrollLeft = playlistRow.scrollLeft;
+        });
+        playlistRow.addEventListener('mouseleave', () => { isDown = false; playlistRow.style.cursor = 'grab'; });
+        playlistRow.addEventListener('mouseup', () => { isDown = false; playlistRow.style.cursor = 'grab'; });
+        playlistRow.addEventListener('mousemove', e => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - playlistRow.offsetLeft;
+            playlistRow.scrollLeft = scrollLeft - (x - startX);
+        });
+        playlistRow.style.cursor = 'grab';
+    }
+</script>
 
 <script>
     const mobileMenuButton = document.querySelector('.mobile-menu-button')
