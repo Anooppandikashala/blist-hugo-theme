@@ -1,51 +1,212 @@
 {{ define "main" }}
+{{ $paginator := .Paginate (partial "list-pages.html" .) }}
+{{ $isBlog := eq .Type "blog" }}
+{{ $total := len .Pages }}
+{{ $size := $paginator.PageSize }}
+{{ $start := add (mul (sub $paginator.PageNumber 1) $size) 1 }}
+{{ $end := add (sub $start 1) (len $paginator.Pages) }}
+{{ $cur := .RelPermalink }}
 
-{{ if eq .Type "blog" }}
-<!-- Inline search bar -->
-<div class="container px-6 pt-8 pb-2 mx-auto max-w-6xl">
-  <div class="blog-inline-search-wrap">
-    <div class="blog-inline-input-row">
-      <svg class="blog-inline-search-icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-        <circle cx="10" cy="10" r="7"/>
-        <line x1="21" y1="21" x2="15" y2="15"/>
-      </svg>
-      <input id="blog-search-input" type="search" class="blog-inline-input" placeholder="Search posts…" autocomplete="off" spellcheck="false" />
-      <kbd class="blog-search-kbd">⌘/</kbd>
-    </div>
-  </div>
-</div>
-{{ end }}
+<!-- Header -->
+<section class="list-hero">
+  <div class="container px-6 mx-auto max-w-6xl">
+    {{ if eq .Kind "term" }}
+    <a href="{{ cond (eq .Data.Plural "playlists") ("/blog/" | relLangURL) ("/tags/" | relLangURL) }}" class="list-back">← {{ cond (eq .Data.Plural "playlists") "All articles" "All tags" }}</a>
+    {{ end }}
+    <p class="hero-eyebrow anooptube-blogtitle-fontFamily-Michroma">{{ if $isBlog }}The blog{{ else if eq .Kind "term" }}{{ cond (eq .Data.Plural "playlists") "Series" "Tag" }}{{ else }}{{ .Site.Title }}{{ end }}</p>
+    <h1 class="list-title">{{ if $isBlog }}All articles{{ else }}{{ .Title }}{{ end }}</h1>
+    <p class="list-sub">
+      {{ if $isBlog }}{{ $total }} hands-on tutorials on C++, Python, Flutter, Android, Linux, PostgreSQL and more, newest first.
+      {{ else if eq .Kind "term" }}{{ with .Description }}{{ . }} {{ end }}{{ $total }} {{ cond (eq $total 1) "article" "articles" }} in this {{ cond (eq .Data.Plural "playlists") "series, in reading order" "topic" }}.
+      {{ else }}{{ $total }} {{ cond (eq $total 1) "page" "pages" }}.{{ end }}
+      {{ if gt $paginator.PageNumber 1 }}<span class="list-pagenum">Page {{ $paginator.PageNumber }} of {{ $paginator.TotalPages }}</span>{{ end }}
+    </p>
 
-<h1 class="container px-6 pt-4 mx-auto max-w-6xl text-2xl font-bold anooptube-blogtitle-fontFamily-Michroma anooptube-letter-spacing-for-michroma">{{ .Title }}:</h1>
-
-<!-- Paginated grid (hidden while searching) -->
-<div id="blog-paginated-content">
-  <div class="container p-6 mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:grid-cols-4 gap-2 lg:gap-4">
-
-      {{ $paginator := .Paginate .Pages.ByDate.Reverse 9 }}
-      {{ $adCounter := 0 }} <!-- Initialize counter -->
-      <div class="col-span-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 lg:gap-4">
-          {{ range $index, $page := $paginator.Pages }}
-          {{ if eq (mod $index 7) 1 }}
-              {{ $adCounter = add $adCounter 1 }} <!-- Increment counter -->
-              {{ if eq $adCounter 1 }}
-                  <script async="async" data-cfasync="false" src="//pl25518674.profitablecpmrate.com/e8b5b070d515c33a4402d25d39cd1ea8/invoke.js"></script>
-                  <div id="container-e8b5b070d515c33a4402d25d39cd1ea8"></div>
-              {{ else if eq $adCounter 2 }}
-                  <script async="async" data-cfasync="false" src="//pl25518703.profitablecpmrate.com/3c09f972eabd4b42a28d53ffeccb1e08/invoke.js"></script>
-                  <div id="container-3c09f972eabd4b42a28d53ffeccb1e08"></div>
-              {{ else if eq $adCounter 3 }}
-              {{ end }}
-          {{ end }}
-          {{- partial "blog-card.html" . -}}
-          {{ end }}
-
+    {{ if $isBlog }}
+    <div class="blog-inline-search-wrap list-search">
+      <div class="blog-inline-input-row">
+        <svg class="blog-inline-search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+        <label for="blog-search-input" class="sr-only">Search articles</label>
+        <input id="blog-search-input" type="search" class="blog-inline-input" placeholder="Search {{ $total }} articles…" autocomplete="off" spellcheck="false" />
+        <kbd class="blog-search-kbd">⌘/</kbd>
       </div>
-      {{- partial "widgets.html" . -}}
+    </div>
+    {{ end }}
+
+    {{ if or $isBlog (and (eq .Kind "term") (eq .Data.Plural "playlists")) }}
+    <nav class="topic-chips" aria-label="Browse by topic">
+      <a href="{{ "/blog/" | relLangURL }}" class="topic-chip{{ if $isBlog }} is-active{{ end }}"{{ if $isBlog }} aria-current="page"{{ end }}>All</a>
+      {{ range .Site.Taxonomies.playlists.ByCount }}
+      {{ $on := eq .Page.RelPermalink $cur }}
+      <a href="{{ .Page.RelPermalink }}" class="topic-chip{{ if $on }} is-active{{ end }}"{{ if $on }} aria-current="page"{{ end }}>{{ .Page.Title }} <span>{{ .Count }}</span></a>
+      {{ end }}
+    </nav>
+    {{ end }}
   </div>
-  {{- partial "pagination.html" . -}}
+</section>
+
+<!-- Paginated content (hidden while searching) -->
+<div id="blog-paginated-content" class="container px-6 pb-6 mx-auto max-w-6xl">
+
+  {{ $items := $paginator.Pages }}
+  {{ if and $isBlog (eq $paginator.PageNumber 1) }}
+  {{ with index $items 0 }}
+  {{ $f := . }}
+  <a href="{{ .RelPermalink }}" class="list-featured">
+    {{ with .Params.thumbnail }}
+    <div class="list-featured-img">
+      <img src="/{{ . }}" alt="{{ $f.Params.thumbnailalt | default $f.Title }}" fetchpriority="high" {{ with imageConfig (path.Join "static" .) }}width="{{ .Width }}" height="{{ .Height }}"{{ end }} />
+    </div>
+    {{ end }}
+    <div class="list-featured-body">
+      <span class="featured-badge list-featured-badge">Latest</span>
+      {{ with .Params.tags }}<div class="card-tags">{{ range first 3 . }}<span class="card-tag">{{ . }}</span>{{ end }}</div>{{ end }}
+      <h2 class="list-featured-title">{{ .Title }}</h2>
+      {{ with .Description }}<p class="list-featured-desc">{{ . }}</p>{{ end }}
+      <div class="featured-meta">{{ partial "date.html" (dict "date" .Date "language" $.Page.Language "format" "short") }} · {{ .ReadingTime }} min read</div>
+      <span class="list-featured-cta">Read article →</span>
+    </div>
+  </a>
+  {{ end }}
+  {{ $items = after 1 $items }}
+  {{ end }}
+
+  {{ if and $isBlog (eq $paginator.PageNumber 1) }}
+  <section id="series" class="series-row-wrap" aria-labelledby="series-h">
+    <div class="section-header mb-4">
+      <h2 id="series-h" class="section-title anooptube-blogtitle-fontFamily-Michroma">Learn in order: series</h2>
+      <div class="section-header-line"></div>
+    </div>
+    <div class="series-row">
+      {{ range .Site.Taxonomies.playlists.ByCount }}
+      {{ $parts := .Pages.ByDate }}
+      {{ $first := index $parts 0 }}
+      {{ $mins := 0 }}{{ range $parts }}{{ $mins = add $mins .ReadingTime }}{{ end }}
+      <div class="series-card">
+        <a href="{{ .Page.RelPermalink }}" class="series-cover" aria-label="{{ .Page.Title }} series">
+          {{ with $first.Params.thumbnail }}<img src="/{{ . }}" alt="" loading="lazy" decoding="async" {{ with imageConfig (path.Join "static" .) }}width="{{ .Width }}" height="{{ .Height }}"{{ end }} />{{ end }}
+          <span class="series-count">▶ {{ .Count }} {{ cond (eq .Count 1) "part" "parts" }}</span>
+        </a>
+        <a href="{{ .Page.RelPermalink }}" class="series-name">{{ .Page.Title }}</a>
+        <span class="series-meta">{{ if ge $mins 60 }}{{ div $mins 60 }}h {{ mod $mins 60 }}m{{ else }}{{ $mins }} min{{ end }} of reading</span>
+        <a href="{{ $first.RelPermalink }}" class="series-start">Start from the beginning →</a>
+      </div>
+      {{ end }}
+    </div>
+  </section>
+  {{ end }}
+
+  <div id="post-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+    {{ $promo := and $isBlog (eq $paginator.PageNumber 1) }}
+    {{ range $i, $p := $items }}
+    {{- partial "blog-card.html" $p -}}
+    {{ if and $promo (eq $i 4) }}
+    <a href="{{ $.Site.Params.youtube | default "https://www.youtube.com/anooptube" }}?sub_confirmation=1" target="_blank" rel="noopener" class="promo-tile">
+      <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 48 48" aria-hidden="true"><path fill="#fff" d="M43.2,33.9c-0.4,2.1-2.1,3.7-4.2,4c-3.3,0.5-8.8,1.1-15,1.1c-6.1,0-11.6-0.6-15-1.1c-2.1-0.3-3.8-1.9-4.2-4C4.4,31.6,4,28.2,4,24c0-4.2,0.4-7.6,0.8-9.9c0.4-2.1,2.1-3.7,4.2-4C12.3,9.6,17.8,9,24,9c6.2,0,11.6,0.6,15,1.1c2.1,0.3,3.8,1.9,4.2,4c0.4,2.3,0.9,5.7,0.9,9.9C44,28.2,43.6,31.6,43.2,33.9z"></path><path fill="#ef4444" d="M20 31L20 17 32 24z"></path></svg>
+      <span class="promo-title">Prefer video?</span>
+      <span class="promo-sub">Most of these tutorials have a step-by-step video on YouTube.</span>
+      <span class="promo-btn">Subscribe free →</span>
+    </a>
+    {{ end }}
+    {{ end }}
+  </div>
+
+  {{ if or $paginator.HasNext (gt $paginator.TotalPages 1) }}
+  <div class="load-more-wrap" id="load-more-wrap" data-total="{{ $total }}" data-start="{{ $start }}" data-end="{{ $end }}">
+    <p class="load-more-status" aria-live="polite">Showing <strong id="lm-range">{{ $start }}–{{ $end }}</strong> of {{ $total }}</p>
+    <div class="load-more-bar"><span id="lm-bar" style="width: {{ div (mul $end 100) $total }}%"></span></div>
+    {{ with $paginator.Next }}
+    <a href="{{ .URL }}" id="load-more" class="load-more-btn" data-next="{{ .URL }}">Load more articles</a>
+    {{ end }}
+  </div>
+  <nav class="list-pager" aria-label="Pagination">
+    {{ template "_internal/pagination.html" . }}
+  </nav>
+  {{ end }}
 </div>
+
+<script>
+/* Load more: the button is a real link to the next page (crawlable, works without JS).
+   With JS, the next page's cards are appended in place and the position survives Back. */
+(function () {
+  var btn = document.getElementById('load-more');
+  var grid = document.getElementById('post-grid');
+  var wrap = document.getElementById('load-more-wrap');
+  if (!btn || !grid || !wrap || !window.fetch || !window.DOMParser) return;
+
+  var total = +wrap.dataset.total, start = +wrap.dataset.start, end = +wrap.dataset.end;
+  var KEY = 'loadmore:' + location.pathname;
+  var loaded = 0, busy = false;
+
+  function update() {
+    document.getElementById('lm-range').textContent = start + '\u2013' + end;
+    document.getElementById('lm-bar').style.width = Math.round(end * 100 / total) + '%';
+  }
+
+  function loadNext() {
+    var url = btn.getAttribute('data-next');
+    if (busy || !url) return Promise.resolve(false);
+    busy = true;
+    btn.classList.add('is-loading');
+    btn.textContent = 'Loading\u2026';
+    return fetch(url, { credentials: 'same-origin' })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
+      .then(function (html) {
+        var doc = new DOMParser().parseFromString(html, 'text/html');
+        var cards = doc.querySelectorAll('#post-grid > *');
+        var first = null;
+        cards.forEach(function (c) {
+          var node = document.importNode(c, true);
+          node.classList.add('is-new');
+          grid.appendChild(node);
+          if (!first) first = node;
+        });
+        end += cards.length;
+        loaded++;
+        var next = doc.getElementById('load-more');
+        if (next) {
+          btn.setAttribute('data-next', next.getAttribute('data-next'));
+          btn.href = next.getAttribute('href');
+          btn.textContent = 'Load more articles';
+        } else {
+          btn.remove();
+        }
+        update();
+        return first;
+      })
+      .catch(function () { location.href = url; return false; })
+      .finally(function () { busy = false; btn.classList.remove('is-loading'); });
+  }
+
+  btn.addEventListener('click', function (e) {
+    e.preventDefault();
+    loadNext().then(function (first) {
+      var link = first && first.querySelector('a');
+      if (link) link.focus({ preventScroll: true });
+    });
+  });
+
+  // Remember how far the reader got, so Back returns them to the same card
+  function save() {
+    try { sessionStorage.setItem(KEY, JSON.stringify({ loaded: loaded, y: window.scrollY })); } catch (e) {}
+  }
+  grid.addEventListener('click', function (e) { if (e.target.closest('a')) save(); });
+  window.addEventListener('pagehide', save);
+
+  var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+  var saved = null;
+  try { saved = JSON.parse(sessionStorage.getItem(KEY) || 'null'); } catch (e) {}
+  if (nav && nav.type === 'back_forward' && saved && saved.loaded > 0) {
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    (function step(n) {
+      if (n <= 0) { window.scrollTo({ top: saved.y, behavior: 'instant' }); return; }
+      loadNext().then(function (ok) { if (ok) step(n - 1); });
+    })(saved.loaded);
+  } else {
+    try { sessionStorage.removeItem(KEY); } catch (e) {}
+  }
+})();
+</script>
 
 {{ if eq .Type "blog" }}
 <!-- Search results panel (shown while searching) -->
@@ -165,7 +326,18 @@
     renderResults(blogFuse.search(q));
   }
 
-  input.addEventListener('input', function () { doSearch(this.value); });
+  input.addEventListener('input', function () {
+    doSearch(this.value);
+    try { history.replaceState(null, '', this.value ? '?q=' + encodeURIComponent(this.value) : location.pathname); } catch (e) {}
+  });
+
+  // Support /blog/?q=term (header search button + sitelinks search box)
+  var params = new URLSearchParams(location.search);
+  if (params.has('q')) {
+    input.value = params.get('q');
+    input.focus();
+    if (input.value) doSearch(input.value);
+  }
 
   // Preload on first focus
   input.addEventListener('focus', function () { loadIndex(function () {}); }, { once: true });
@@ -173,5 +345,23 @@
 </script>
 {{ end }}
 
-{{- partial "social.html" . -}}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": {{ if $isBlog }}"All articles"{{ else }}{{ .Title }}{{ end }},
+  "url": {{ $paginator.URL | absURL }},
+  "isPartOf": { "@id": "https://anooptube.in/#website" },
+  "mainEntity": {
+    "@type": "ItemList",
+    "numberOfItems": {{ $total }},
+    "itemListElement": [
+      {{ range $i, $p := $paginator.Pages }}{{ if $i }},{{ end }}
+      { "@type": "ListItem", "position": {{ add $start $i }}, "url": {{ $p.Permalink }}, "name": {{ $p.Title }} }{{ end }}
+    ]
+  }
+}
+</script>
+
+
 {{ end }}

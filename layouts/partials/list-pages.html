@@ -1,0 +1,4 @@
+{{- /* Pages to paginate on a list page: series read oldest-first (Part 1 first), everything else newest-first */ -}}
+{{- $p := .Pages -}}
+{{- if and (eq .Kind "term") (eq .Data.Plural "playlists") }}{{ $p = .Pages.ByDate }}{{ end -}}
+{{- return $p -}}

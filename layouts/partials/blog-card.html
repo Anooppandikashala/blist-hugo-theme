@@ -2,7 +2,7 @@
 
     {{ if .Params.thumbnail }}
     <a href="{{ .Permalink }}" class="card-img-wrap" style="text-decoration:none;display:block;">
-        <img src="/{{ .Params.thumbnail }}" alt="{{ .Params.title }}" loading="lazy" />
+        <img src="/{{ .Params.thumbnail }}" alt="{{ .Params.thumbnailalt | default .Title }}" loading="lazy" decoding="async" {{ with imageConfig (path.Join "static" .Params.thumbnail) }}width="{{ .Width }}" height="{{ .Height }}"{{ end }} />
         {{ if not (or (or .Site.Params.hideMeta .Params.hideMeta) false) }}
         <span class="card-date-badge">
             {{ partial "date.html" (dict "date" .Date "language" $.Page.Language "format" "short") }}
@@ -24,7 +24,7 @@
         {{ end }}
 
         <a href="{{ .Permalink }}" class="card-content-link">
-            <div class="card-title">{{ .Params.title }}</div>
+            <h3 class="card-title">{{ .Title }}</h3>
 
             {{ if .Params.description }}
             <div class="card-desc">{{ .Params.description }}</div>

@@ -1,62 +1,212 @@
 {{ define "main" }}
 {{- partial "intro.html" . -}}
 {{ $frontBundle := .Site.Params.frontBundle | default "blog" }}
+{{ $posts := where .Site.RegularPages.ByDate.Reverse "Type" $frontBundle }}
 
-<div class="container px-6 pt-8 pb-2 mx-auto max-w-6xl section-header">
-    <h2 class="text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 anooptube-blogtitle-fontFamily-Michroma anooptube-letter-spacing-for-michroma whitespace-nowrap">Playlists</h2>
-    <div class="section-header-line"></div>
-</div>
-
-<div class="container mx-auto max-w-6xl pb-6 playlist-scroll-outer">
-    <div class="playlist-scroll-row px-6">
-        {{ range $key, $value := .Site.Taxonomies.playlists }}
-        <a href="/playlists/{{ $key | urlize }}" class="playlist-chip">
-            <span class="playlist-chip-name">{{ $key | humanize }}</span>
-            <span class="playlist-chip-count">{{ len $value }}</span>
-        </a>
+<section id="latest" class="container px-6 pt-4 pb-2 mx-auto max-w-6xl" aria-labelledby="latest-h">
+    <div class="section-header mb-5">
+        <h2 id="latest-h" class="section-title anooptube-blogtitle-fontFamily-Michroma">Latest articles</h2>
+        <div class="section-header-line"></div>
+        <a href="{{ "/blog/" | relLangURL }}" class="section-link">View all →</a>
+    </div>
+    <div id="latest-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {{ range first 6 (after 1 $posts) }}
+        {{- partial "blog-card.html" . -}}
         {{ end }}
     </div>
-</div>
-
-<div class="container mx-auto max-w-6xl px-6 pb-4">
-    <div class="ad-container">
-        <script type="text/javascript">
-            atOptions = {
-                'key' : '502480a173cea121c3fa59819e26fc88',
-                'format' : 'iframe',
-                'height' : 90,
-                'width' : 728,
-                'params' : {}
-            };
-        </script>
-        <script type="text/javascript" src="//www.highperformanceformat.com/502480a173cea121c3fa59819e26fc88/invoke.js"></script>
+    {{ if gt (len $posts) 7 }}
+    <div class="load-more-wrap" id="home-more-wrap">
+        <p class="load-more-status" aria-live="polite">Showing <strong id="home-more-count">7</strong> of {{ len $posts }} articles</p>
+        <a href="{{ "/blog/" | relLangURL }}" id="home-more" class="load-more-btn" data-total="{{ len $posts }}">Show more articles</a>
     </div>
-</div>
-
-<div class="container px-6 pt-4 pb-2 mx-auto max-w-6xl section-header">
-    <h2 class="text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 anooptube-blogtitle-fontFamily-Michroma anooptube-letter-spacing-for-michroma whitespace-nowrap">Latest Uploads</h2>
-    <div class="section-header-line"></div>
-</div>
-
-<div class="container px-6 pb-8 mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    {{ range first 6 (where .Site.RegularPages.ByDate.Reverse "Type" $frontBundle) }}
-    {{- partial "blog-card.html" . -}}
     {{ end }}
-</div>
+</section>
 
-{{ if gt (len (where .Site.RegularPages.ByDate.Reverse "Type" $frontBundle)) 6 }}
-<div class="text-center mb-12">
-    <a class="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 text-sm font-medium hover:border-gray-400 dark:hover:border-gray-500 hover:text-gray-900 dark:hover:text-white transition-all"
-       href="{{ (index (.Site.Menus.main) 1).URL | absLangURL }}" lang="{{ .Lang }}">
-        {{ i18n "showMore" }}
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-            <line x1="5" y1="12" x2="19" y2="12" />
-            <polyline points="12 5 19 12 12 19" />
-        </svg>
-    </a>
-</div>
-{{ end }}
+<script>
+/* "Show more" on the home page: pulls cards from /blog/ pages, 6 at a time, skipping ones already shown.
+   Without JS the button is a plain link to /blog/. */
+(function () {
+  var btn = document.getElementById('home-more');
+  var grid = document.getElementById('latest-grid');
+  if (!btn || !grid || !window.fetch || !window.DOMParser) return;
 
-{{- partial "social.html" . -}}
+  var BATCH = 6, KEY = 'homemore', total = +btn.dataset.total;
+  var base = btn.getAttribute('href'), page = 1, done = false, busy = false, queue = [], shown = 0;
+  var seen = new Set();
+  function path(h) { return new URL(h, location.href).pathname; }
+  document.querySelectorAll('.featured-card, #latest-grid .card-content-link').forEach(function (a) { seen.add(path(a.getAttribute('href'))); });
+  var countEl = document.getElementById('home-more-count');
+  var count = seen.size;
+
+  function fetchPage() {
+    var url = page === 1 ? base : base + 'page/' + page + '/';
+    page++;
+    return fetch(url, { credentials: 'same-origin' })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
+      .then(function (html) {
+        var doc = new DOMParser().parseFromString(html, 'text/html');
+        var feat = doc.querySelector('.list-featured');
+        if (feat) seen.add(path(feat.getAttribute('href')));
+        doc.querySelectorAll('#post-grid > .blog-card').forEach(function (c) {
+          var a = c.querySelector('.card-content-link');
+          var p = a && path(a.getAttribute('href'));
+          if (p && !seen.has(p)) { seen.add(p); queue.push(c); }
+        });
+        if (!doc.getElementById('load-more')) done = true;
+      });
+  }
+
+  function fill() {
+    if (queue.length >= BATCH || done) return Promise.resolve();
+    return fetchPage().then(fill);
+  }
+
+  function showMore() {
+    if (busy) return Promise.resolve(null);
+    busy = true;
+    btn.classList.add('is-loading');
+    btn.textContent = 'Loading\u2026';
+    return fill().then(function () {
+      var first = null;
+      queue.splice(0, BATCH).forEach(function (c) {
+        var node = document.importNode(c, true);
+        node.classList.add('is-new');
+        grid.appendChild(node);
+        if (!first) first = node;
+      });
+      count = grid.children.length + 1;
+      shown++;
+      countEl.textContent = Math.min(count, total);
+      if (done && !queue.length) {
+        btn.textContent = 'Browse all articles \u2192';
+        btn.dataset.finished = '1';
+      } else {
+        btn.textContent = 'Show more articles';
+      }
+      return first;
+    }).catch(function () { location.href = base; return null; })
+      .finally(function () { busy = false; btn.classList.remove('is-loading'); });
+  }
+
+  btn.addEventListener('click', function (e) {
+    if (btn.dataset.finished) return;          // all loaded: let the link go to /blog/
+    e.preventDefault();
+    showMore().then(function (first) {
+      var link = first && first.querySelector('a');
+      if (link) link.focus({ preventScroll: true });
+    });
+  });
+
+  // Keep the reader's place when they come Back from a post
+  function save() { try { sessionStorage.setItem(KEY, JSON.stringify({ shown: shown, y: window.scrollY })); } catch (e) {} }
+  grid.addEventListener('click', function (e) { if (e.target.closest('a')) save(); });
+  window.addEventListener('pagehide', save);
+  var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+  var saved = null;
+  try { saved = JSON.parse(sessionStorage.getItem(KEY) || 'null'); } catch (e) {}
+  if (nav && nav.type === 'back_forward' && saved && saved.shown > 0) {
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    (function step(n) {
+      if (n <= 0) { window.scrollTo({ top: saved.y, behavior: 'instant' }); return; }
+      showMore().then(function () { step(n - 1); });
+    })(saved.shown);
+  } else {
+    try { sessionStorage.removeItem(KEY); } catch (e) {}
+  }
+})();
+</script>
+
+<section class="container px-6 pt-12 pb-4 mx-auto max-w-6xl" aria-labelledby="topics-h">
+    <div class="section-header mb-5">
+        <h2 id="topics-h" class="section-title anooptube-blogtitle-fontFamily-Michroma">Browse by topic</h2>
+        <div class="section-header-line"></div>
+        <a href="{{ "/blog/#series" | relLangURL }}" class="section-link">All series →</a>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {{ range .Site.Taxonomies.playlists.ByCount }}
+        <div class="topic-card">
+            <a href="{{ .Page.RelPermalink }}" class="topic-card-head">
+                <span class="topic-card-name">{{ .Page.Title }}</span>
+                <span class="topic-card-count">{{ .Count }} {{ cond (eq .Count 1) "post" "posts" }}</span>
+            </a>
+            <ul class="topic-card-list">
+                {{ range first 3 .Pages.ByDate }}
+                <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+                {{ end }}
+            </ul>
+            <a href="{{ .Page.RelPermalink }}" class="topic-card-more">Start the series →</a>
+        </div>
+        {{ end }}
+    </div>
+</section>
+
+<section class="container px-6 py-12 mx-auto max-w-6xl">
+    <div class="yt-band">
+        <div>
+            <h2 class="yt-band-title">Prefer learning by video?</h2>
+            <p class="yt-band-sub">Most tutorials here have a matching step-by-step video. Subscribe so you don't miss the next one.</p>
+        </div>
+        <a href="{{ .Site.Params.youtube | default "https://www.youtube.com/anooptube" }}?sub_confirmation=1" target="_blank" rel="noopener" class="hero-btn hero-btn-yt">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
+                <path fill="#fff" d="M43.2,33.9c-0.4,2.1-2.1,3.7-4.2,4c-3.3,0.5-8.8,1.1-15,1.1c-6.1,0-11.6-0.6-15-1.1c-2.1-0.3-3.8-1.9-4.2-4C4.4,31.6,4,28.2,4,24c0-4.2,0.4-7.6,0.8-9.9c0.4-2.1,2.1-3.7,4.2-4C12.3,9.6,17.8,9,24,9c6.2,0,11.6,0.6,15,1.1c2.1,0.3,3.8,1.9,4.2,4c0.4,2.3,0.9,5.7,0.9,9.9C44,28.2,43.6,31.6,43.2,33.9z"></path>
+                <path fill="#c4302b" d="M20 31L20 17 32 24z"></path>
+            </svg>
+            Subscribe on YouTube
+        </a>
+    </div>
+</section>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": "https://anooptube.in/#person",
+  "name": "ANOOP P",
+  "alternateName": "anooptube",
+  "url": "https://anooptube.in/",
+  "description": "Software developer and educator creating coding tutorials on Python, C++, Java, Flutter, Git, PostgreSQL, Linux and more.",
+  "image": "https://anooptube.in/images/anoop.webp",
+  "jobTitle": "Software Developer & Educator",
+  "sameAs": [
+    "https://www.youtube.com/anooptube",
+    "https://github.com/Anooppandikashala",
+    "https://www.linkedin.com/in/anooppandikashala/",
+    "https://www.instagram.com/anoop_p_krishnan/",
+    "https://www.buymeacoffee.com/anoopp"
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": "https://anooptube.in/#website",
+  "name": "#anooptube",
+  "url": "https://anooptube.in/",
+  "description": {{ .Site.Params.description }},
+  "publisher": {
+    "@type": "Person",
+    "@id": "https://anooptube.in/#person"
+  },
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://anooptube.in/blog/?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Latest articles",
+  "itemListElement": [
+    {{ range $i, $p := first 7 $posts }}{{ if $i }},{{ end }}
+    { "@type": "ListItem", "position": {{ add $i 1 }}, "url": {{ $p.Permalink }} }{{ end }}
+  ]
+}
+</script>
 {{ end }}

@@ -1,0 +1,133 @@
+{{ define "main" }}
+{{ $soc := .Site.Params.homepage.social }}
+{{ $posts := where .Site.RegularPages.ByDate.Reverse "Type" (.Site.Params.frontBundle | default "blog") }}
+{{ $first := index (last 1 $posts) 0 }}
+{{ $yt := .Site.Params.youtube | default "https://www.youtube.com/anooptube" }}
+
+<!-- Profile header -->
+<section class="container max-w-5xl mx-auto px-6 pt-10 md:pt-14">
+    <div class="about-hero">
+        <div class="about-avatar" aria-hidden="true">
+            {{ with .Params.photo }}<img src="/{{ . }}" alt="Anoop P" width="400" height="400" fetchpriority="high" />{{ else }}AP{{ end }}
+        </div>
+        <div class="about-hero-text">
+            <p class="hero-eyebrow anooptube-blogtitle-fontFamily-Michroma">About {{ .Site.Title }}</p>
+            <h1 class="about-name">Hi, I'm Anoop P <span aria-hidden="true">👋</span></h1>
+            {{ with .Params.role }}<p class="about-role">{{ . }}</p>{{ end }}
+            {{ with .Params.intro }}<p class="about-intro">{{ . }}</p>{{ end }}
+            <div class="flex flex-wrap gap-3">
+                <a href="{{ $yt }}?sub_confirmation=1" target="_blank" rel="noopener" class="hero-btn hero-btn-yt">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#fff" d="M43.2,33.9c-0.4,2.1-2.1,3.7-4.2,4c-3.3,0.5-8.8,1.1-15,1.1c-6.1,0-11.6-0.6-15-1.1c-2.1-0.3-3.8-1.9-4.2-4C4.4,31.6,4,28.2,4,24c0-4.2,0.4-7.6,0.8-9.9c0.4-2.1,2.1-3.7,4.2-4C12.3,9.6,17.8,9,24,9c6.2,0,11.6,0.6,15,1.1c2.1,0.3,3.8,1.9,4.2,4c0.4,2.3,0.9,5.7,0.9,9.9C44,28.2,43.6,31.6,43.2,33.9z"></path><path fill="#c4302b" d="M20 31L20 17 32 24z"></path></svg>
+                    Subscribe on YouTube
+                </a>
+                <a href="{{ "/blog/" | relLangURL }}" class="hero-btn hero-btn-primary">Read the blog →</a>
+            </div>
+        </div>
+    </div>
+
+    <ul class="about-stats">
+        <li><strong>{{ len $posts }}</strong><span>articles</span></li>
+        <li><strong>{{ len .Site.Taxonomies.playlists }}</strong><span>topic series</span></li>
+        <li><strong>{{ with $first }}{{ .Date.Format "2006" }}{{ end }}</strong><span>writing since</span></li>
+        <li><strong>Free</strong><span>always, no sign-up</span></li>
+    </ul>
+</section>
+
+<!-- Story + topics -->
+<section class="container max-w-5xl mx-auto px-6 pt-12 grid gap-10 lg:grid-cols-5">
+    <div class="lg:col-span-3 prose dark:prose-dark max-w-none about-prose">
+        {{ .Content }}
+    </div>
+    <aside class="lg:col-span-2" aria-labelledby="focus-h">
+        <h2 id="focus-h" class="section-title anooptube-blogtitle-fontFamily-Michroma mb-4">What I write about</h2>
+        <ul class="about-focus">
+            {{ range .Params.focus }}
+            <li>
+                {{ if .link }}<a href="{{ .link | relLangURL }}">{{ else }}<div>{{ end }}
+                    <span class="about-focus-name">{{ .name }}</span>
+                    <span class="about-focus-desc">{{ .desc }}</span>
+                {{ if .link }}</a>{{ else }}</div>{{ end }}
+            </li>
+            {{ end }}
+        </ul>
+    </aside>
+</section>
+
+<!-- Start here -->
+<section class="container max-w-5xl mx-auto px-6 pt-14" aria-labelledby="latest-h">
+    <div class="section-header mb-5">
+        <h2 id="latest-h" class="section-title anooptube-blogtitle-fontFamily-Michroma">Start here: latest articles</h2>
+        <div class="section-header-line"></div>
+        <a href="{{ "/blog/" | relLangURL }}" class="section-link">View all →</a>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {{ range first 3 $posts }}{{ partial "blog-card.html" . }}{{ end }}
+    </div>
+</section>
+
+<!-- Projects (data: content/en/page/projects.md) -->
+{{ with site.GetPage "/page/projects" }}{{ with .Params.projects }}
+<section id="projects" class="container max-w-5xl mx-auto px-6 pt-14" aria-labelledby="projects-h">
+    <div class="section-header mb-2">
+        <h2 id="projects-h" class="section-title anooptube-blogtitle-fontFamily-Michroma">Things I've built</h2>
+        <div class="section-header-line"></div>
+    </div>
+    <p class="list-sub mb-6">Tools, apps and side projects, most of them free to use.</p>
+    {{ partial "project-cards.html" . }}
+</section>
+{{ end }}{{ end }}
+
+<!-- Connect -->
+<section class="container max-w-5xl mx-auto px-6 pt-14" aria-labelledby="connect-h">
+    <div class="section-header mb-5">
+        <h2 id="connect-h" class="section-title anooptube-blogtitle-fontFamily-Michroma">Connect</h2>
+        <div class="section-header-line"></div>
+    </div>
+    <div class="about-connect">
+        {{ with $soc.youtube }}<a href="{{ . }}" target="_blank" rel="noopener" class="connect-card connect-yt"><span class="connect-name">YouTube</span><span class="connect-handle">@anooptube</span><span class="connect-hint">Video tutorials</span></a>{{ end }}
+        {{ with $soc.github }}<a href="{{ . }}" target="_blank" rel="noopener" class="connect-card"><span class="connect-name">GitHub</span><span class="connect-handle">Anooppandikashala</span><span class="connect-hint">Code and projects</span></a>{{ end }}
+        {{ with $soc.linkedin }}<a href="{{ . }}" target="_blank" rel="noopener" class="connect-card"><span class="connect-name">LinkedIn</span><span class="connect-handle">anooppandikashala</span><span class="connect-hint">Work and career</span></a>{{ end }}
+        {{ with $soc.instagram }}<a href="{{ . }}" target="_blank" rel="noopener" class="connect-card"><span class="connect-name">Instagram</span><span class="connect-handle">@anoop_p_krishnan</span><span class="connect-hint">Behind the scenes</span></a>{{ end }}
+        {{ with $soc.portfolio }}<a href="{{ . }}" target="_blank" rel="noopener" class="connect-card"><span class="connect-name">Portfolio</span><span class="connect-handle">anooppandikashala.github.io</span><span class="connect-hint">Selected work</span></a>{{ end }}
+        <a href="#projects" class="connect-card"><span class="connect-name">Projects</span><span class="connect-handle">Tools &amp; apps</span><span class="connect-hint">Things I've built</span></a>
+    </div>
+</section>
+
+<!-- Support -->
+<section class="container max-w-5xl mx-auto px-6 py-14">
+    <div class="yt-band about-coffee">
+        <div>
+            <h2 class="yt-band-title">Found something useful?</h2>
+            <p class="yt-band-sub">Buying me a coffee keeps the tutorials coming, and free for everyone.</p>
+        </div>
+        <a href="{{ .Site.Params.buymeacoffee | default "https://www.buymeacoffee.com/anoopp" }}" target="_blank" rel="noopener" class="hero-btn about-coffee-btn">☕ Buy me a coffee</a>
+    </div>
+</section>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  "url": {{ .Permalink }},
+  "mainEntity": {
+    "@type": "Person",
+    "@id": "https://anooptube.in/#person",
+    "name": "ANOOP P",
+    "alternateName": "anooptube",
+    "url": "https://anooptube.in/page/about/",
+    "image": "https://anooptube.in/images/anoop.webp",
+    "description": {{ .Params.intro }},
+    "jobTitle": "Software Developer & Educator",
+    "worksFor": { "@type": "Organization", "name": "Kefas" },
+    "knowsAbout": ["C++", "Python", "Flutter", "Android Development", "PostgreSQL", "Git", "Linux", "Design Patterns"],
+    "sameAs": [
+      "https://www.youtube.com/anooptube",
+      "https://github.com/Anooppandikashala",
+      "https://www.linkedin.com/in/anooppandikashala/",
+      "https://www.instagram.com/anoop_p_krishnan/",
+      "https://www.buymeacoffee.com/anoopp"
+    ]
+  }
+}
+</script>
+{{ end }}

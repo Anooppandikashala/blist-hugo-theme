@@ -1,26 +1,50 @@
-<section class="container max-w-6xl mx-auto px-6 py-16 md:py-24">
-    <div class="grid md:grid-cols-2 gap-10 lg:gap-20 items-center">
+{{ $posts := where .Site.RegularPages.ByDate.Reverse "Type" (.Site.Params.frontBundle | default "blog") }}
+{{ $featured := index $posts 0 }}
+<section class="container max-w-6xl mx-auto px-6 pt-10 pb-8 md:pt-14 md:pb-12">
+    <div class="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
         <div>
-            <p class="text-xs font-medium tracking-widest uppercase text-gray-400 dark:text-gray-500 mb-5 anooptube-blogtitle-fontFamily-Michroma anooptube-letter-spacing-for-michroma">{{ .Site.Params.introTitle | safeHTML }}</p>
-            <h1 class="anooptube-blogtitle-fontFamily-Playball text-6xl md:text-7xl leading-tight mb-6 dark:text-white">{{ .Site.Params.introSubtitle | safeHTML }}</h1>
-            <p class="text-gray-500 dark:text-gray-400 mb-8 text-base leading-relaxed max-w-sm">Coding tutorials and tips on Python, C++, Java, Git & more — with video content on YouTube.</p>
+            <p class="hero-eyebrow anooptube-blogtitle-fontFamily-Michroma">{{ .Site.Params.introTitle | safeHTML }} {{ .Site.Title }}</p>
+            <h1 class="hero-title">
+                Practical coding tutorials for
+                <span class="hero-title-accent">C++, Python, Flutter, Linux &amp; more</span>
+            </h1>
+            <p class="hero-sub">Hands-on guides, real code and clear explanations, from first steps to production. Read it here, or watch the free video lessons on YouTube.</p>
             <div class="flex items-center gap-3 flex-wrap">
-                <a href="https://www.youtube.com/anooptube" target="_blank" rel="noopener"
-                   class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-red-500 hover:bg-red-600 text-white text-sm font-medium transition-colors shadow-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="18" height="18" viewBox="0 0 48 48">
+                <a href="#latest" class="hero-btn hero-btn-primary">
+                    Start reading
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+                </a>
+                <a href="{{ .Site.Params.youtube | default "https://www.youtube.com/anooptube" }}" target="_blank" rel="noopener" class="hero-btn hero-btn-yt">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
                         <path fill="#fff" d="M43.2,33.9c-0.4,2.1-2.1,3.7-4.2,4c-3.3,0.5-8.8,1.1-15,1.1c-6.1,0-11.6-0.6-15-1.1c-2.1-0.3-3.8-1.9-4.2-4C4.4,31.6,4,28.2,4,24c0-4.2,0.4-7.6,0.8-9.9c0.4-2.1,2.1-3.7,4.2-4C12.3,9.6,17.8,9,24,9c6.2,0,11.6,0.6,15,1.1c2.1,0.3,3.8,1.9,4.2,4c0.4,2.3,0.9,5.7,0.9,9.9C44,28.2,43.6,31.6,43.2,33.9z"></path>
                         <path fill="#c4302b" d="M20 31L20 17 32 24z"></path>
                     </svg>
-                    YouTube
-                </a>
-                <a href="https://www.buymeacoffee.com/anoopp" target="_blank" rel="noopener"
-                   class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium hover:border-gray-400 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all">
-                    ☕ Buy me a coffee
+                    Watch on YouTube
                 </a>
             </div>
+            <ul class="hero-stats">
+                <li><strong>{{ len $posts }}</strong> articles</li>
+                <li><strong>{{ len .Site.Taxonomies.playlists }}</strong> topic series</li>
+                <li><strong>Free</strong>, no sign-up</li>
+            </ul>
         </div>
-        <div class="order-first md:order-last">
-            {{- partial "hero-svg.html" . -}}
-        </div>
+
+        {{ with $featured }}
+        <a href="{{ .RelPermalink }}" class="featured-card">
+            {{ with .Params.thumbnail }}
+            <div class="featured-img">
+                <img src="/{{ . }}" alt="{{ $featured.Params.thumbnailalt | default $featured.Title }}" {{ with imageConfig (path.Join "static" .) }}width="{{ .Width }}" height="{{ .Height }}"{{ end }} fetchpriority="high" />
+                <span class="featured-badge">Latest</span>
+            </div>
+            {{ end }}
+            <div class="featured-body">
+                <div class="featured-meta">
+                    {{ partial "date.html" (dict "date" .Date "language" $.Page.Language "format" "short") }} · {{ .ReadingTime }} min read
+                </div>
+                <h2 class="featured-title">{{ .Title }}</h2>
+                {{ with .Description }}<p class="featured-desc">{{ . }}</p>{{ end }}
+            </div>
+        </a>
+        {{ end }}
     </div>
 </section>

@@ -1,0 +1,81 @@
+{{ $currentPermalink := .Permalink }}
+{{ with .Params.playlists }}
+  {{ $playlistName := index . 0 }}
+  {{ $playlistKey  := $playlistName | urlize }}
+  {{ $playlistPages := index $.Site.Taxonomies.playlists $playlistKey }}
+  {{ if and $playlistPages (gt (len $playlistPages) 1) }}
+    {{ $sorted := $playlistPages.Pages.ByDate }}
+    {{ $total  := len $sorted }}
+
+    {{/* Find 1-based index of current post in the series */}}
+    {{ $currentIndex := 0 }}
+    {{ range $i, $p := $sorted }}
+      {{ if eq $p.Permalink $currentPermalink }}
+        {{ $currentIndex = add $i 1 }}
+      {{ end }}
+    {{ end }}
+
+    <div class="series-nav" role="navigation" aria-label="Series navigation">
+      {{/* Auto-open when series is short; collapse long ones so it doesn't dominate the page */}}
+      <details class="series-nav-details" {{ if le $total 6 }}open{{ end }}>
+        <summary class="series-nav-summary">
+          <span class="series-nav-summary-left">
+            <svg class="series-nav-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            </svg>
+            <span class="series-nav-title">{{ $playlistName }}</span>
+          </span>
+          <span class="series-nav-badge">{{ $currentIndex }} / {{ $total }}</span>
+        </summary>
+
+        <ol class="series-nav-list">
+          {{ range $i, $p := $sorted }}
+            {{ $isCurrent := eq $p.Permalink $currentPermalink }}
+            <li class="series-nav-item{{ if $isCurrent }} series-nav-item--active{{ end }}">
+              {{ if $isCurrent }}
+              <span class="series-nav-link series-nav-link--active" aria-current="page">
+                <span class="series-nav-num">{{ add $i 1 }}</span>
+                <span class="series-nav-name">{{ $p.Title }}</span>
+                <span class="series-nav-here">← here</span>
+              </span>
+              {{ else }}
+              <a href="{{ $p.Permalink }}" class="series-nav-link">
+                <span class="series-nav-num">{{ add $i 1 }}</span>
+                <span class="series-nav-name">{{ $p.Title }}</span>
+              </a>
+              {{ end }}
+            </li>
+          {{ end }}
+        </ol>
+
+        <a href="{{ printf "/playlists/%s/" $playlistKey | absURL }}" class="series-nav-footer-link">
+          View all in "{{ $playlistName }}" →
+        </a>
+
+      </details>
+    </div>
+
+    <script>
+    (function () {
+      var details = document.querySelector('.series-nav-details');
+      if (!details) return;
+      function scrollActive() {
+        var active = details.querySelector('.series-nav-item--active');
+        var list   = details.querySelector('.series-nav-list');
+        if (!active || !list) return;
+        var itemTop    = active.offsetTop;
+        var listHeight = list.clientHeight;
+        list.scrollTop = itemTop - listHeight / 2 + active.clientHeight / 2;
+      }
+      if (details.open) {
+        scrollActive();
+      } else {
+        details.addEventListener('toggle', function () {
+          if (details.open) scrollActive();
+        }, { once: true });
+      }
+    })();
+    </script>
+  {{ end }}
+{{ end }}

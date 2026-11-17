@@ -1,16 +1,4 @@
-{{ define "main" }} {{ $lastmodstr := (partial "date.html" (dict "date" .Lastmod "language" $.Page.Language "format" "long")) }} {{ $datestr := (partial "date.html" (dict "date" .Date "language" $.Page.Language "format" "long")) }} {{ if .Params.thumbnail
-}}
-<div class="relative max-w-6xl mx-auto px-4 md:px-6">
-    <div class="rounded-xl overflow-hidden">
-        <img src="/{{ .Params.thumbnail }}" class="w-full object-contain" style="max-height: 28rem;" />
-        {{ if not (or (or .Site.Params.hideMeta .Params.hideMeta) false) }}
-        <div class="absolute top-4 right-8 rounded-md shadow-sm bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 text-xs font-medium px-2.5 py-1">
-            {{ $datestr }}
-        </div>
-        {{ end }}
-    </div>
-</div>
-{{ end }}
+{{ define "main" }} {{ $lastmodstr := (partial "date.html" (dict "date" .Lastmod "language" $.Page.Language "format" "long")) }} {{ $datestr := (partial "date.html" (dict "date" .Date "language" $.Page.Language "format" "long")) }} 
 
 <!-- <div class="container mx-auto max-w-6xl anooptube-ad-horizontal-height">
     {{- partial "ads-for-footer-page.html" . -}}
@@ -23,7 +11,8 @@
 
             {{- partial "breadcrumbs.html" . -}}
 
-            <h2 class="text-xl font-semibold mb-3 anooptube-blogtitle anooptube-blogtitle-fontFamily-Michroma anooptube-letter-spacing-for-michroma anooptube-word-spacing-for-michroma">{{ .Title }}</h2>
+            <h1 class="post-title">{{ .Title }}</h1>
+                {{ with .Description }}<p class="post-lead">{{ . }}</p>{{ end }}
                 {{ if not (or (or .Site.Params.hideMeta .Params.hideMeta) false) }}
                 <div class="post-meta-strip">
                     <!-- Date -->
@@ -58,6 +47,28 @@
                         </svg>
                         {{ .WordCount }} words
                     </span>
+                    <!-- GoatCounter view count -->
+                    <span class="flex items-center gap-1" id="post-view-count" style="display:none!important">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <circle cx="12" cy="12" r="2"/>
+                            <path d="M22 12c-2.667 4.667-6 7-10 7s-7.333-2.333-10-7c2.667-4.667 6-7 10-7s7.333 2.333 10 7"/>
+                        </svg>
+                        <span id="post-view-count-text"></span>
+                    </span>
+                    <script>
+                    (window.requestIdleCallback || function(fn){ setTimeout(fn, 200); })(function () {
+                        fetch('https://anooptube.goatcounter.com/counter/' + encodeURIComponent(window.location.pathname) + '.json')
+                            .then(function (r) { return r.ok ? r.json() : null; })
+                            .then(function (d) {
+                                if (d && parseInt(d.count, 10) > 0) {
+                                    document.getElementById('post-view-count-text').textContent = d.count + ' views';
+                                    document.getElementById('post-view-count').style.removeProperty('display');
+                                }
+                            })
+                            .catch(function () {});
+                    });
+                    </script>
                     {{ if ne $datestr $lastmodstr }}
                     <!-- Last modified -->
                     <span class="flex items-center gap-1">
@@ -81,17 +92,36 @@
                     <span>{{ i18n "translationsLabel" }} {{ $linksOutput }}</span>
                     {{- end }} {{ end }}
                 </div>
-                {{ end }} 
-                <script type="text/javascript">
-                    atOptions = {
-                        'key' : '502480a173cea121c3fa59819e26fc88',
-                        'format' : 'iframe',
-                        'height' : 90,
-                        'width' : 728,
-                        'params' : {}
+                {{ end }}
+                {{ with .Params.thumbnail }}
+                <figure class="post-hero">
+                    <img src="/{{ . }}" alt="{{ $.Params.thumbnailalt | default $.Title }}" fetchpriority="high" decoding="async" {{ with imageConfig (path.Join "static" .) }}width="{{ .Width }}" height="{{ .Height }}"{{ end }} />
+                </figure>
+                {{ end }}
+                <div id="ad-post-top" class="ad-container"></div>
+                <script>
+                window.addEventListener('load', function () {
+                    window.atOptions = {
+                        'key': '502480a173cea121c3fa59819e26fc88',
+                        'format': 'iframe',
+                        'height': 90,
+                        'width': 728,
+                        'params': {}
                     };
+                    var s = document.createElement('script');
+                    s.type = 'text/javascript';
+                    s.src = '//www.highperformanceformat.com/502480a173cea121c3fa59819e26fc88/invoke.js';
+                    document.getElementById('ad-post-top').appendChild(s);
+                });
                 </script>
-                <script type="text/javascript" src="//www.highperformanceformat.com/502480a173cea121c3fa59819e26fc88/invoke.js"></script>
+                {{- partial "series-nav.html" . -}}
+                {{- partial "youtube-cta.html" . -}}
+                {{ if .TableOfContents }}{{ if gt (len (findRE "<li>" .TableOfContents)) 2 }}
+                <details class="toc-mobile lg:hidden">
+                    <summary>On this page</summary>
+                    {{ replace .TableOfContents `id="TableOfContents"` "" | safeHTML }}
+                </details>
+                {{ end }}{{ end }}
                 {{ .Content }}
 
                 {{- partial "share.html" . -}}
@@ -129,7 +159,7 @@
 
 <script>
 (function () {
-    var tocLinks = document.querySelectorAll('#TableOfContents a');
+    var tocLinks = document.querySelectorAll('.toc-widget #TableOfContents a');
     if (!tocLinks.length) return;
 
     var headings = [];
@@ -178,16 +208,16 @@
 
 <!-- {{- partial "article-ad-1.html" . -}}  -->
 
-{{ $related := first 3 (where (.Site.RegularPages.Related .) "Permalink" "ne" .Permalink) }}
+{{ $related := first 6 (where (.Site.RegularPages.Related .) "Permalink" "ne" .Permalink) }}
 {{ if $related }}
 <div class="container px-4 md:px-6 mx-auto max-w-6xl py-10">
 
     <div class="section-header mb-6">
-        <h2 class="text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 anooptube-blogtitle-fontFamily-Michroma anooptube-letter-spacing-for-michroma whitespace-nowrap">Related Posts</h2>
+        <h2 class="text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 anooptube-blogtitle-fontFamily-Michroma anooptube-letter-spacing-for-michroma whitespace-nowrap">Keep reading</h2>
         <div class="section-header-line"></div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {{ range $related }}
             {{- partial "blog-card.html" . -}}
         {{ end }}
@@ -196,4 +226,70 @@
 </div>
 {{ end }}
 
-{{- partial "social.html" . -}} {{ end }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "inLanguage": {{ .Site.LanguageCode }},
+  "wordCount": {{ .WordCount }},
+  {{ with .Params.tags }}"keywords": {{ delimit . ", " }},{{ end }}
+  {{ with .Params.playlists }}"articleSection": {{ index . 0 }},{{ end }}
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": {{ .Permalink }}
+  },
+  "headline": {{ .Title }},
+  "description": {{ (.Description | default .Site.Params.description) }},
+  "datePublished": "{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}",
+  "dateModified": "{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}",
+  "author": {
+    "@type": "Person",
+    "@id": "https://anooptube.in/#person",
+    "name": {{ (.Params.Author | default .Site.Params.author | default "ANOOP P") }},
+    "url": "https://anooptube.in/page/about/",
+    "sameAs": [
+      "https://www.youtube.com/anooptube",
+      "https://github.com/Anooppandikashala",
+      "https://www.linkedin.com/in/anooppandikashala/"
+    ]
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "#anooptube",
+    "url": "https://anooptube.in/",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://anooptube.in/logo.png"
+    }
+  },
+  {{ with .Params.thumbnail }}"image": {
+    "@type": "ImageObject",
+    "url": {{ (print "/" .) | absURL }}{{ with imageConfig (path.Join "static" .) }},
+    "width": {{ .Width }},
+    "height": {{ .Height }}{{ end }}
+  },{{ end }}
+  "url": {{ .Permalink }}
+}
+</script>
+
+{{ with .Params.youtube_id }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoObject",
+  "name": {{ $.Title }},
+  "description": {{ ($.Description | default $.Site.Params.description) }},
+  "thumbnailUrl": "https://img.youtube.com/vi/{{ . }}/maxresdefault.jpg",
+  "uploadDate": "{{ $.Date.Format "2006-01-02T15:04:05Z07:00" }}",
+  "contentUrl": "https://www.youtube.com/watch?v={{ . }}",
+  "embedUrl": "https://www.youtube.com/embed/{{ . }}",
+  "author": {
+    "@type": "Person",
+    "@id": "https://anooptube.in/#person",
+    "name": {{ ($.Params.Author | default $.Site.Params.author | default "ANOOP P") }}
+  }
+}
+</script>
+{{ end }}
+
+{{ end }}

@@ -1,21 +1,44 @@
-<footer class="border-t border-gray-100 dark:border-gray-800 mt-8">
-    <div class="container mx-auto max-w-6xl px-6 py-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-        <span class="text-sm text-gray-400 dark:text-gray-500">
-            {{ if (isset .Site.Params "copyright") }}
-            {{ .Site.Params.copyright | safeHTML }}
-            {{ else }}
-            {{ dateFormat "2006" now }} © {{ .Site.Title }}
-            {{ end }}
-        </span>
-        <div class="flex items-center gap-6 text-sm text-gray-400 dark:text-gray-500">
-            <a href="{{ .Site.Home.Permalink }}privacy" class="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Privacy Policy</a>
-            <span onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="cursor-pointer hover:text-gray-700 dark:hover:text-gray-300 transition-colors flex items-center gap-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                    <path d="M18 15l-6 -6l-6 6h12" />
-                </svg>
-                Top
-            </span>
+{{ $soc := .Site.Params.homepage.social }}
+<footer class="site-footer mt-12">
+    <div class="container mx-auto max-w-6xl px-6 pt-12 pb-8 grid gap-10 md:grid-cols-4">
+        <div class="md:col-span-2">
+            <a href="{{ .Site.Home.Permalink }}" class="inline-block mb-3" aria-label="{{ .Site.Title }} home">
+                <img src="/logo.webp" alt="{{ .Site.Title }}" width="691" height="160" loading="lazy" class="footer-logo logo-light" />
+                <img src="/logo_dark.webp" alt="{{ .Site.Title }}" width="691" height="160" loading="lazy" class="footer-logo logo-dark" />
+            </a>
+            <p class="footer-blurb">{{ .Site.Params.description }}</p>
+            <ul class="footer-social">
+                {{ with $soc.youtube }}<li><a href="{{ . }}" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z"/></svg></a></li>{{ end }}
+                {{ with $soc.github }}<li><a href="{{ . }}" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0C17.3 4.6 18.3 5 18.3 5c.7 1.6.2 2.9.1 3.2.8.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.5.4.9 1.1.9 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg></a></li>{{ end }}
+                {{ with $soc.linkedin }}<li><a href="{{ . }}" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M20.4 20.5h-3.6v-5.6c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9v5.7H9.3V9h3.4v1.6c.5-.9 1.6-1.8 3.4-1.8 3.6 0 4.3 2.4 4.3 5.5v6.2zM5.3 7.4a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.1 20.5H3.6V9h3.5v11.5zM22.2 0H1.8C.8 0 0 .8 0 1.7v20.6c0 .9.8 1.7 1.8 1.7h20.4c1 0 1.8-.8 1.8-1.7V1.7C24 .8 23.2 0 22.2 0z"/></svg></a></li>{{ end }}
+                {{ with $soc.instagram }}<li><a href="{{ . }}" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.6" cy="6.4" r="1" fill="currentColor" stroke="none"/></svg></a></li>{{ end }}
+                {{ with $soc.portfolio }}<li><a href="{{ . }}" target="_blank" rel="noopener" aria-label="Portfolio"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg></a></li>{{ end }}
+                {{ with .Site.Params.buymeacoffee }}<li><a href="{{ . }}" target="_blank" rel="noopener" aria-label="Buy me a coffee"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z"/><path d="M6 2v2M10 2v2M14 2v2"/></svg></a></li>{{ end }}
+            </ul>
+        </div>
+        <nav aria-label="Topics">
+            <h2 class="footer-head">Topics</h2>
+            <ul class="footer-links">
+                {{ range first 7 .Site.Taxonomies.playlists.ByCount }}
+                <li><a href="{{ .Page.RelPermalink }}">{{ .Page.Title }}</a></li>
+                {{ end }}
+            </ul>
+        </nav>
+        <nav aria-label="Site">
+            <h2 class="footer-head">Site</h2>
+            <ul class="footer-links">
+                <li><a href="{{ "/blog/" | relLangURL }}">All articles</a></li>
+                <li><a href="{{ "/tags/" | relLangURL }}">Tags</a></li>
+                <li><a href="{{ "/page/about/#projects" | relLangURL }}">Projects</a></li>
+                <li><a href="{{ "/page/about/" | relLangURL }}">About</a></li>
+                <li><a href="{{ .Site.Home.Permalink }}privacy/">Privacy Policy</a></li>
+                <li><a href="{{ "/index.xml" | relLangURL }}">RSS feed</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="footer-bottom">
+        <div class="container mx-auto max-w-6xl px-6 py-5 text-sm">
+            {{ if (isset .Site.Params "copyright") }}{{ .Site.Params.copyright | safeHTML }}{{ else }}{{ dateFormat "2006" now }} © {{ .Site.Title }}{{ end }}
         </div>
     </div>
 </footer>
@@ -43,51 +66,21 @@
     const darkModeIcon = '<svg class="svg-icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M623.709091 46.545455C826.181818 97.745455 977.454545 283.927273 977.454545 505.018182 977.454545 765.672727 768 977.454545 512 977.454545 267.636364 977.454545 67.490909 786.618182 48.872727 542.254545c-2.327273-2.327273-2.327273-4.654545-2.327272-9.30909 0-16.290909 11.636364-27.927273 27.927272-27.927273 13.963636 0 23.272727 9.309091 27.927273 20.945454 51.2 123.345455 172.218182 209.454545 311.854545 209.454546 186.181818 0 337.454545-153.6 337.454546-344.436364 0-121.018182-60.509091-225.745455-153.6-288.581818-9.309091-4.654545-16.290909-16.290909-16.290909-25.6 0-16.290909 13.963636-30.254545 27.927273-30.254545h13.963636z"  /></svg>';
     const lightModeIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"> <path stroke="none" d="M0 0h24v24H0z" fill="none" /> <circle cx="12" cy="12" r="3" /> <line x1="12" y1="5" x2="12" y2="5.01" /> <line x1="17" y1="7" x2="17" y2="7.01" /> <line x1="19" y1="12" x2="19" y2="12.01" /> <line x1="17" y1="17" x2="17" y2="17.01" /> <line x1="12" y1="19" x2="12" y2="19.01" /> <line x1="7" y1="17" x2="7" y2="7.01" /> <line x1="5" y1="12" x2="5" y2="12.01" /> <line x1="7" y1="7" x2="7" y2="7.01" /> </svg>';
 
-    function changeDarkModeLogoToLight() {
-        document.getElementById("anooptube-dark-mode-toggle").innerHTML = lightModeIcon;
-    }
-
-    function changeLightModeLogoToDark() {
-        document.getElementById("anooptube-dark-mode-toggle").innerHTML = darkModeIcon;
-    }
-
-    function changeLogoToDark() {
-        document.getElementById("anooptube_logo").src = document.getElementById("anooptube_logo").src.replace("logo", "logo_dark");
-        changeDarkModeLogoToLight();
-    }
-
-    function changeLogoToLight() {
-        document.getElementById("anooptube_logo").src = document.getElementById("anooptube_logo").src.replace("logo_dark", "logo");
-        changeLightModeLogoToDark();
+    function syncDarkIcon() {
+        var btn = document.getElementById("anooptube-dark-mode-toggle");
+        var isDark = document.documentElement.classList.contains('dark');
+        btn.innerHTML = isDark ? lightModeIcon : darkModeIcon;
+        btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
     }
 
     function toggleDarkMode() {
-        if (document.documentElement.classList.contains('dark')) {
-            document.documentElement.classList.remove('dark')
-            changeLogoToLight()
-            localStorage.setItem('darkmode', 'light')
-        } else {
-            document.documentElement.classList.add('dark')
-            changeLogoToDark()
-            localStorage.setItem('darkmode', 'dark')
-        }
+        var isDark = document.documentElement.classList.toggle('dark');
+        try { localStorage.setItem('darkmode', isDark ? 'dark' : 'light'); } catch (e) {}
+        syncDarkIcon();
     }
     if (darkmode) {
         darkmode.addEventListener('click', toggleDarkMode);
-    }
-
-    const darkStorage = localStorage.getItem('darkmode');
-    const isBrowserDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-    if (!darkStorage) {
-        document.documentElement.classList.add('dark');
-        changeLogoToDark();
-    } else {
-        changeLightModeLogoToDark();
-    }
-
-    if (darkStorage && darkStorage === 'dark') {
-        toggleDarkMode();
+        syncDarkIcon();
     }
 
     const highlights = document.querySelectorAll("div.highlight")
@@ -151,33 +144,17 @@
             var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             bar.style.width = (docHeight > 0 ? (scrollTop / docHeight) * 100 : 0) + '%';
         }
-        window.addEventListener('scroll', update, { passive: true });
+        var ticking = false;
+        window.addEventListener('scroll', function () {
+            if (!ticking) {
+                requestAnimationFrame(function () { update(); ticking = false; });
+                ticking = true;
+            }
+        }, { passive: true });
         update();
     })();
 </script>
 
-<script>
-    // Drag-to-scroll for playlist row
-    const playlistRow = document.querySelector('.playlist-scroll-row');
-    if (playlistRow) {
-        let isDown = false, startX, scrollLeft;
-        playlistRow.addEventListener('mousedown', e => {
-            isDown = true;
-            playlistRow.style.cursor = 'grabbing';
-            startX = e.pageX - playlistRow.offsetLeft;
-            scrollLeft = playlistRow.scrollLeft;
-        });
-        playlistRow.addEventListener('mouseleave', () => { isDown = false; playlistRow.style.cursor = 'grab'; });
-        playlistRow.addEventListener('mouseup', () => { isDown = false; playlistRow.style.cursor = 'grab'; });
-        playlistRow.addEventListener('mousemove', e => {
-            if (!isDown) return;
-            e.preventDefault();
-            const x = e.pageX - playlistRow.offsetLeft;
-            playlistRow.scrollLeft = scrollLeft - (x - startX);
-        });
-        playlistRow.style.cursor = 'grab';
-    }
-</script>
 
 <script>
     const mobileMenuButton = document.querySelector('.mobile-menu-button')
