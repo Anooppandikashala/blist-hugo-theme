@@ -18,7 +18,7 @@
         {{ if .Params.tags }}
         <div class="card-tags">
             {{ range first 3 .Params.tags }}
-            <a href="{{ printf "/tags/%s" (. | urlize) | relLangURL }}" class="card-tag">{{ . }}</a>
+            <a href="{{ printf "/tags/%s/" (. | urlize) | relLangURL }}" class="card-tag">{{ . }}</a>
             {{ end }}
         </div>
         {{ end }}

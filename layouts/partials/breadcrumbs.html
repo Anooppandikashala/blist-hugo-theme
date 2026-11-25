@@ -6,7 +6,7 @@
     {{ if .Params.playlists }}{{ $playlist = index .Params.playlists 0 }}{{ end }}
     {{ if $playlist }}
     <span class="post-breadcrumbs-sep" aria-hidden="true">›</span>
-    <a href="{{ printf "/playlists/%s" ($playlist | urlize) | relLangURL }}">{{ $playlist }}</a>
+    <a href="{{ printf "/playlists/%s/" ($playlist | urlize) | relLangURL }}">{{ $playlist }}</a>
     {{ end }}
     <span class="post-breadcrumbs-sep" aria-hidden="true">›</span>
     <span class="post-breadcrumbs-current" title="{{ .Title }}">{{ .Title }}</span>
